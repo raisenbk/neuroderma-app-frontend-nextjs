@@ -1,3 +1,4 @@
+// src/app/faq/page.jsx
 import Link from 'next/link';
 
 export const metadata = {
@@ -25,7 +26,7 @@ export default function FAQPage() {
     },
     {
       question: "Apakah data gambar saya aman?",
-      answer: "Kami berkomitmen untuk menjaga privasi pengguna. Semua gambar yang diunggah untuk keperluan prediksi tidak disimpan di sistem kami setelah proses prediksi selesai. Gambar hanya digunakan sementara untuk menjalankan analisis, dan akan dihapus secara otomatis tanpa disimpan di server atau basis data manapun. Dengan demikian, data Anda tetap aman dan terlindungi."
+      answer: "Kami berkomitmen untuk menjaga privasi pengguna. (Di sini Anda perlu menjelaskan kebijakan privasi Anda mengenai penyimpanan dan penggunaan gambar. Jika gambar tidak disimpan setelah prediksi, sebutkan itu. Jika disimpan, jelaskan bagaimana dan untuk berapa lama, serta tujuannya)."
     },
     {
       question: "Apa yang harus saya lakukan jika hasil deteksi menunjukkan kemungkinan suatu penyakit?",
@@ -50,7 +51,7 @@ export default function FAQPage() {
         <div className="mt-8 text-center">
           <p className="text-gray-600">
             Tidak menemukan jawaban yang Anda cari? 
-            <Link href="/kontak" className="text-blue-600 hover:text-blue-700"> Hubungi kami</Link>.
+            <Link href="/kontak" className="text-blue-600 hover:text-blue-700"> Hubungi kami</Link> (jika Anda berencana membuat halaman kontak).
           </p>
           <Link href="/" className="block mt-4 text-blue-600 hover:text-blue-700 font-semibold">
             &larr; Kembali ke Halaman Utama
