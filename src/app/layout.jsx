@@ -2,7 +2,7 @@
 // Pastikan Anda mengimpor font Inter atau font lain yang Anda gunakan
 import { Inter } from 'next/font/google';
 import Link from 'next/link'; // Untuk navigasi
-import Image from 'next/image'
+import Image from 'next/image';
 import './globals.css'; // Asumsi file CSS global Anda ada di sini
 
 const inter = Inter({ subsets: ['latin'] });
@@ -44,9 +44,6 @@ export default function RootLayout({ children }) {
             <div className="space-x-4">
               <Link href="/" className="text-gray-600 hover:text-blue-600">
                 Beranda
-              </Link>
-              <Link href="/info" className="text-gray-600 hover:text-blue-600">
-                Info Penyakit
               </Link>
               <Link href="/tentang-kami" className="text-gray-600 hover:text-blue-600">
                 Tentang Kami

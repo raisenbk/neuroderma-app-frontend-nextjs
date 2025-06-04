@@ -1,10 +1,47 @@
 // src/app/faq/page.jsx
-import Link from 'next/link';
+'use client'; // Komponen ini sekarang interaktif, jadi perlu 'use client'
 
-export const metadata = {
-  title: 'FAQ - Sistem Deteksi Penyakit Kulit',
-  description: 'Temukan jawaban atas pertanyaan umum mengenai Sistem Deteksi Penyakit Kulit.',
-};
+import Link from 'next/link';
+import { useState } from 'react';
+import { ChevronDown, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react'; // Ikon
+
+// Komponen untuk satu item FAQ (Accordion)
+function FaqItem({ faq, index, isOpen, onToggle }) {
+  return (
+    // Setiap item FAQ sekarang memiliki latar belakang dan ring sendiri
+    <div className="bg-slate-50/70 rounded-lg ring-1 ring-slate-200/50 overflow-hidden">
+      <h2>
+        <button
+          type="button"
+          className="flex items-center justify-between w-full py-5 px-4 sm:px-6 text-left font-semibold text-slate-700 hover:text-blue-600 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 transition-colors duration-200"
+          onClick={() => onToggle(index)}
+          aria-expanded={isOpen}
+          aria-controls={`faq-answer-${index}`}
+        >
+          <span className="text-lg sm:text-xl">{faq.question}</span>
+          <ChevronDown
+            className={`w-6 h-6 text-slate-400 transform transition-transform duration-300 ${
+              isOpen ? 'rotate-180 text-blue-500' : 'text-slate-500' // Ubah warna chevron saat terbuka
+            }`}
+          />
+        </button>
+      </h2>
+      <div
+        id={`faq-answer-${index}`}
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${ // Durasi diubah agar lebih cepat
+          isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0' // max-h disesuaikan
+        }`}
+        role="region"
+        aria-labelledby={`faq-question-${index}`}
+      >
+        {/* Padding ditambahkan di sini untuk jawaban */}
+        <div className="px-4 sm:px-6 pt-0 pb-5 text-slate-600 leading-relaxed text-base">
+          {faq.answer}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function FAQPage() {
   const faqs = [
@@ -26,7 +63,7 @@ export default function FAQPage() {
     },
     {
       question: "Apakah data gambar saya aman?",
-      answer: "Kami berkomitmen untuk menjaga privasi pengguna. (Di sini Anda perlu menjelaskan kebijakan privasi Anda mengenai penyimpanan dan penggunaan gambar. Jika gambar tidak disimpan setelah prediksi, sebutkan itu. Jika disimpan, jelaskan bagaimana dan untuk berapa lama, serta tujuannya)."
+      answer: "Kami berkomitmen untuk menjaga privasi pengguna. Semua gambar yang diunggah untuk keperluan prediksi tidak disimpan di sistem kami setelah proses prediksi selesai. Gambar hanya digunakan sementara untuk menjalankan analisis, dan akan dihapus secara otomatis tanpa disimpan di server atau basis data manapun. Dengan demikian, data Anda tetap aman dan terlindungi."
     },
     {
       question: "Apa yang harus saya lakukan jika hasil deteksi menunjukkan kemungkinan suatu penyakit?",
@@ -34,27 +71,59 @@ export default function FAQPage() {
     }
   ];
 
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const handleToggle = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  // Metadata akan diatur oleh RootLayout atau layout khusus untuk /faq jika ada
+  // export const metadata = {
+  //   title: 'FAQ - NeuroDerma',
+  //   description: 'Temukan jawaban atas pertanyaan umum mengenai NeuroDerma.',
+  // };
+
   return (
-    <main className="container mx-auto px-4 py-8 max-w-3xl">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg prose lg:prose-xl mx-auto">
-        <h1>Pertanyaan yang Sering Diajukan (FAQ)</h1>
-        
-        <div className="space-y-6">
+    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]"> {/* Latar belakang terang */}
+      <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200"> {/* Kartu utama terang */}
+        <div className="text-center mb-12">
+          <HelpCircle className="w-16 h-16 mx-auto mb-4 text-blue-500" /> {/* Ikon warna disesuaikan */}
+          <h1 className="text-4xl sm:text-5xl font-bold">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500"> {/* Teks gradien disesuaikan */}
+              Pertanyaan Umum
+            </span>
+          </h1>
+          <p className="mt-4 text-lg text-slate-600"> {/* Warna teks disesuaikan */}
+            Temukan jawaban untuk pertanyaan yang sering diajukan mengenai NeuroDerma.
+          </p>
+        </div>
+
+        {/* Kontainer untuk item FAQ */}
+        <div className="space-y-4"> {/* Memberi jarak antar item FAQ */}
           {faqs.map((faq, index) => (
-            <div key={index}>
-              <h2 className="text-xl font-semibold text-gray-700">{faq.question}</h2>
-              <p className="text-gray-600">{faq.answer}</p>
-            </div>
+            <FaqItem
+              key={index}
+              faq={faq}
+              index={index}
+              isOpen={openIndex === index}
+              onToggle={handleToggle}
+            />
           ))}
         </div>
 
-        <div className="mt-8 text-center">
-          <p className="text-gray-600">
-            Tidak menemukan jawaban yang Anda cari? 
-            <Link href="/kontak" className="text-blue-600 hover:text-blue-700"> Hubungi kami</Link> (jika Anda berencana membuat halaman kontak).
+        <div className="mt-12 text-center">
+          <p className="text-slate-600 mb-6 text-lg"> {/* Warna teks disesuaikan */}
+            Tidak menemukan jawaban yang Anda cari?
+            <Link href="/kontak" className="ml-1 text-blue-600 hover:text-blue-500 font-medium underline transition-colors">
+              Hubungi kami
+            </Link>.
           </p>
-          <Link href="/" className="block mt-4 text-blue-600 hover:text-blue-700 font-semibold">
-            &larr; Kembali ke Halaman Utama
+          <Link 
+            href="/" 
+            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-teal-600 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 transition-all duration-300 transform hover:scale-105"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Kembali ke Halaman Utama
           </Link>
         </div>
       </div>
