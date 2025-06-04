@@ -80,12 +80,6 @@ export default function HomePage() {
           <PredictionResultDisplay result={prediction} uploadedImageFile={uploadedFile} />
         )}
 
-        <footer className="text-center mt-12 w-full"> {/* Tambahkan w-full jika ingin footer tetap lebar */}
-            <p className="text-xs text-gray-500">
-                <strong>Disclaimer:</strong> Aplikasi ini adalah alat bantu dan tidak menggantikan diagnosis medis profesional.
-                Selalu konsultasikan dengan dokter untuk masalah kesehatan.
-            </p>
-        </footer>
       </div>
     </main>
   );
