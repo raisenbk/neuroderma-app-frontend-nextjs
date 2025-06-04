@@ -7,7 +7,6 @@ export default function ImageUploader({ onImageUpload, onPredictionResult, setIs
   const [selectedImage, setSelectedImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
-
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
