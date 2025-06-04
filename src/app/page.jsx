@@ -1,4 +1,3 @@
-// src/app/page.jsx
 'use client';
 
 import { useState } from 'react';
@@ -77,6 +76,7 @@ export default function HomePage() {
 
         {prediction && !isLoading && uploadedFile && (
           // PredictionResultDisplay juga akan ditengahkan
+          // Pastikan path ke PredictionResult.jsx sudah benar
           <PredictionResultDisplay result={prediction} uploadedImageFile={uploadedFile} />
         )}
 
