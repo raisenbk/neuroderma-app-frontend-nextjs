@@ -9,9 +9,7 @@ const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localho
 
 
 async function getDiseaseBySlug(slug) {
-
-  if (!slug) { // Tambahkan pengecekan jika slug undefined/null
-
+  if (!slug) {
     console.error("getDiseaseBySlug called with undefined or null slug");
 
     return null;
@@ -69,33 +67,31 @@ async function getDiseaseBySlug(slug) {
 
 // Komponen Halaman Dinamis
 
-export default async function DiseasePage(props) { // Ubah { params } menjadi props
+export default async function DiseasePage({ params }) { // Ubah { params } menjadi props
+    const slug = (await params)?.slug; // ✅ Await just in case Next returns a Promise
 
-  // Karena params mungkin promise, kita perlu menanganinya dengan hati-hati
-
-  // Namun, biasanya Next.js sudah me-resolve 'params' untuk page components.
-
-  // Mari kita asumsikan 'props.params' sudah merupakan objek yang benar.
-
-  const params = props.params;
-
-//   console.log('DiseasePage received params:', params);
-
-
-  if (!params || typeof params.slug === 'undefined') {
-
+  if (!slug) {
     console.error('Slug is not available in params.');
-
     notFound();
-
     return null;
-
   }
 
-
-  const slug = params.slug;
-
   const diseaseData = await getDiseaseBySlug(slug);
+
+  if (!diseaseData) {
+    notFound();
+    return null;
+  }
+
+  // return (
+  //   <div>
+  //     <h1>{diseaseData.name}</h1>
+  //     <p>{diseaseData.description}</p>
+  //     {/* render other data */}
+  //   </div>
+  // );
+
+
 
 
   // Log ini penting untuk melihat apa isi diseaseData SETELAH getDiseaseBySlug
@@ -252,36 +248,22 @@ export async function generateStaticParams() {
 
 // (Opsional) Untuk SEO: Menambahkan metadata dinamis
 
-export async function generateMetadata(props) { // Ubah { params } menjadi props
+export async function generateMetadata({ params }) { // Ubah { params } menjadi props
 
-  const params = props.params;
+  const slug = (await params)?.slug;
 
-//   console.log('generateMetadata received params:', params);
-
-
-  if (!params || typeof params.slug === 'undefined') {
-
-    console.error('Slug is not available in params for metadata generation.');
-
+  if (!slug) {
     return {
-
-      title: 'Informasi Penyakit Tidak Ditemukan',
-
-      description: 'Halaman informasi penyakit yang Anda cari tidak ditemukan.',
-
+      title: 'Penyakit Tidak Ditemukan',
     };
-
   }
 
+  const diseaseData = await getDiseaseBySlug(slug);
 
-  const slug = params.slug;
-
-  const diseaseData = await getDiseaseBySlug(slug); // diseaseData di sini adalah objek attributes
-
-
-  // Log ini penting untuk melihat apa isi diseaseData SETELAH getDiseaseBySlug
-
-//   console.log(`Fetched diseaseData for metadata (slug "${slug}"):`, JSON.stringify(diseaseData, null, 2));
+  // return {
+  //   title: diseaseData?.name ?? 'Penyakit Tidak Diketahui',
+  //   description: diseaseData?.description ?? '',
+  // };
 
 
   if (!diseaseData) {
