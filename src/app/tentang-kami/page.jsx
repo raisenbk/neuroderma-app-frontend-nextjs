@@ -23,7 +23,6 @@ export default function TentangKamiPage() {
             Proyek inovatif ini dirancang sebagai alat bantu cerdas untuk identifikasi awal beberapa kondisi kulit umum melalui analisis gambar berbasis kecerdasan buatan.
           </p>
         </section>
-        
         <div className="space-y-10">
           <div className="p-6 bg-slate-50/70 rounded-lg ring-1 ring-slate-200/50">
             <h2 className="flex items-center text-2xl sm:text-3xl font-semibold mb-4 text-slate-800">
@@ -70,10 +69,15 @@ export default function TentangKamiPage() {
         </div>
 
         <div className="mt-12 text-center">
-          <Link href="/" className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105">
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Kembali ke Halaman Utama
-          </Link>
+            <div className="inline-flex w-full animate-rotate-border duration-500 ease-out transform-3d rounded-lg max-w-sm cursor-pointer hover:scale-[1.03] hover:bg-conic/[from_var(--border-angle)] from-white via-red-600 to-white from-80% via-90% to-100% p-px transition-all">
+              <Link
+                href="/"
+                className="flex items-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Kembali ke Halaman Utama
+              </Link>
+            </div>
         </div>
       </div>
     </main>

@@ -86,10 +86,17 @@ export default async function DiseasePage({ params: paramsPromise }) {
                 <AlertCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
                 <h1 className="text-3xl font-bold text-slate-800 mb-4">Informasi Tidak Ditemukan</h1>
                 <p className="text-slate-600 mb-6">Maaf, informasi untuk penyakit dengan slug "{slug}" tidak dapat ditemukan saat ini.</p>
-                <Link href="/" className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105">
-                    <ArrowLeft className="w-5 h-5 mr-2" />
-                    Kembali ke Daftar Info
-                </Link>
+                <div className="mt-12 text-center">
+                    <div className="inline-flex w-full animate-rotate-border duration-500 ease-out transform-3d rounded-lg max-w-sm cursor-pointer hover:scale-[1.03] hover:bg-conic/[from_var(--border-angle)] from-white via-red-600 to-white from-80% via-90% to-100% p-px transition-all">
+                      <Link
+                        href="/"
+                        className="flex items-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600"
+                      >
+                        <ArrowLeft className="w-5 h-5 mr-2" />
+                        Kembali ke Halaman Utama
+                      </Link>
+                    </div>
+                </div>
             </div>
         </main>
     );
@@ -124,10 +131,15 @@ export default async function DiseasePage({ params: paramsPromise }) {
         </div>
 
         <div className="mt-12 text-center">
-          <Link href="/" className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105">
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Kembali ke Daftar Info Penyakit
-          </Link>
+            <div className="inline-flex w-full animate-rotate-border duration-500 ease-out transform-3d rounded-lg max-w-sm cursor-pointer hover:scale-[1.03] hover:bg-conic/[from_var(--border-angle)] from-white via-red-600 to-white from-80% via-90% to-100% p-px transition-all">
+              <Link
+                href="/"
+                className="flex items-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Kembali ke Halaman Utama
+              </Link>
+            </div>
         </div>
       </div>
     </main>

@@ -77,15 +77,9 @@ export default function FAQPage() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  // Metadata akan diatur oleh RootLayout atau layout khusus untuk /faq jika ada
-  // export const metadata = {
-  //   title: 'FAQ - NeuroDerma',
-  //   description: 'Temukan jawaban atas pertanyaan umum mengenai NeuroDerma.',
-  // };
-
   return (
     <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]"> {/* Latar belakang terang */}
-      <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200"> {/* Kartu utama terang */}
+      <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200 "> {/* Kartu utama terang */}
         <div className="text-center mb-12">
           <HelpCircle className="w-16 h-16 mx-auto mb-4 text-blue-500" /> {/* Ikon warna disesuaikan */}
           <h1 className="text-4xl sm:text-5xl font-bold">
@@ -118,13 +112,17 @@ export default function FAQPage() {
               Hubungi kami
             </Link>.
           </p>
-          <Link 
-            href="/" 
-            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-teal-600 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 transition-all duration-300 transform hover:scale-105"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Kembali ke Halaman Utama
-          </Link>
+          <div className="mt-12 text-center">
+              <div className="inline-flex w-full animate-rotate-border duration-500 ease-out transform-3d rounded-lg max-w-sm cursor-pointer hover:scale-[1.03] hover:bg-conic/[from_var(--border-angle)] from-white via-red-600 to-white from-80% via-90% to-100% p-px transition-all">
+                <Link
+                  href="/"
+                  className="flex items-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600"
+                >
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                  Kembali ke Halaman Utama
+                </Link>
+              </div>
+          </div>
         </div>
       </div>
     </main>
