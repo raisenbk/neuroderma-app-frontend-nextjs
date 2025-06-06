@@ -1,14 +1,12 @@
 // src/app/faq/page.jsx
-'use client'; // Komponen ini sekarang interaktif, jadi perlu 'use client'
+'use client';
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ChevronDown, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react'; // Ikon
+import { ChevronDown, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react'; 
 
-// Komponen untuk satu item FAQ (Accordion)
 function FaqItem({ faq, index, isOpen, onToggle }) {
   return (
-    // Setiap item FAQ sekarang memiliki latar belakang dan ring sendiri
     <div className="bg-slate-50/70 rounded-lg ring-1 ring-slate-200/50 overflow-hidden">
       <h2>
         <button
@@ -21,20 +19,19 @@ function FaqItem({ faq, index, isOpen, onToggle }) {
           <span className="text-lg sm:text-xl">{faq.question}</span>
           <ChevronDown
             className={`w-6 h-6 text-slate-400 transform transition-transform duration-300 ${
-              isOpen ? 'rotate-180 text-blue-500' : 'text-slate-500' // Ubah warna chevron saat terbuka
+              isOpen ? 'rotate-180 text-blue-500' : 'text-slate-500'
             }`}
           />
         </button>
       </h2>
       <div
         id={`faq-answer-${index}`}
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${ // Durasi diubah agar lebih cepat
-          isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0' // max-h disesuaikan
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${ 
+          isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0' 
         }`}
         role="region"
         aria-labelledby={`faq-question-${index}`}
       >
-        {/* Padding ditambahkan di sini untuk jawaban */}
         <div className="px-4 sm:px-6 pt-0 pb-5 text-slate-600 leading-relaxed text-base">
           {faq.answer}
         </div>
@@ -78,22 +75,21 @@ export default function FAQPage() {
   };
 
   return (
-    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]"> {/* Latar belakang terang */}
-      <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200 "> {/* Kartu utama terang */}
+    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]">
+      <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200 ">
         <div className="text-center mb-12">
-          <HelpCircle className="w-16 h-16 mx-auto mb-4 text-blue-500" /> {/* Ikon warna disesuaikan */}
+          <HelpCircle className="w-16 h-16 mx-auto mb-4 text-blue-500" /> 
           <h1 className="text-4xl sm:text-5xl font-bold">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500"> {/* Teks gradien disesuaikan */}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">
               Pertanyaan Umum
             </span>
           </h1>
-          <p className="mt-4 text-lg text-slate-600"> {/* Warna teks disesuaikan */}
+          <p className="mt-4 text-lg text-slate-600"> 
             Temukan jawaban untuk pertanyaan yang sering diajukan mengenai NeuroDerma.
           </p>
         </div>
 
-        {/* Kontainer untuk item FAQ */}
-        <div className="space-y-4"> {/* Memberi jarak antar item FAQ */}
+        <div className="space-y-4"> 
           {faqs.map((faq, index) => (
             <FaqItem
               key={index}

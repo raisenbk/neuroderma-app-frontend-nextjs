@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 
-// Tidak perlu interface props lagi, Anda bisa menggunakan JSDoc jika mau
 /**
  * @param {{
  * onImageUpload: (file: File) => void;
@@ -61,7 +60,7 @@ export default function ImageUploader({
     formData.append('file', selectedImage);
 
     try {
-      const response = await fetch('http://localhost:8000/predict', { // Sesuaikan URL API Anda
+      const response = await fetch('http://localhost:8000/predict', { 
         method: 'POST',
         body: formData,
       });

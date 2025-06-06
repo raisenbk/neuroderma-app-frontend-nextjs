@@ -2,7 +2,7 @@
 import { notFound } from 'next/navigation';
 import Markdown from 'markdown-to-jsx';
 import Link from 'next/link';
-import { Thermometer, Activity, ShieldAlert, Users, UserCheck, ArrowLeft, Info, Zap, AlertCircle } from 'lucide-react'; // Ikon baru
+import { Thermometer, Activity, ShieldAlert, Users, UserCheck, ArrowLeft, Info, Zap, AlertCircle } from 'lucide-react';
 
 const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
 
@@ -24,11 +24,9 @@ async function getDiseaseBySlug(slug) {
     const responseJson = await res.json();
     if (responseJson.data && responseJson.data.length > 0 && responseJson.data[0].attributes) {
 
-      return responseJson.data[0].attributes; // Mengembalikan objek attributes secara langsung
+      return responseJson.data[0].attributes; 
 
     } else if (responseJson.data && responseJson.data.length > 0 && !responseJson.data[0].attributes) {
-
-      // Jika attributes tidak ada, tapi data[0] ada, log dan return data[0] agar bisa diinspeksi
 
       console.warn(`Disease with slug ${slug} found, but attributes are missing. Returning data[0] for inspection.`);
 
@@ -42,7 +40,6 @@ async function getDiseaseBySlug(slug) {
   }
 }
 
-// Komponen untuk menampilkan setiap seksi informasi
 function InfoSection({ title, content, icon: IconComponent, iconColor = "text-blue-500" }) {
   if (!content) return <p className="text-slate-500 italic">Informasi {title.toLowerCase()} belum tersedia.</p>;
   return (
@@ -51,7 +48,6 @@ function InfoSection({ title, content, icon: IconComponent, iconColor = "text-bl
         {IconComponent && <IconComponent className={`w-7 h-7 mr-3 ${iconColor}`} />}
         {title}
       </h2>
-      {/* Styling khusus untuk Markdown content agar lebih menarik */}
       <div className="prose prose-slate lg:prose-lg max-w-none text-slate-700 leading-relaxed 
                     prose-headings:text-slate-700 prose-headings:font-semibold
                     prose-strong:text-slate-700
@@ -79,7 +75,6 @@ export default async function DiseasePage({ params: paramsPromise }) {
   const diseaseData = await getDiseaseBySlug(slug);
 
   if (!diseaseData) {
-    // Menampilkan pesan yang lebih informatif jika data tidak ditemukan
     return (
         <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)] flex flex-col items-center justify-center">
             <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-md mx-auto ring-1 ring-slate-200 text-center">
@@ -106,7 +101,7 @@ export default async function DiseasePage({ params: paramsPromise }) {
 
   if (typeof name === 'undefined') {
     console.error(`Field "name" is missing in diseaseData for slug "${slug}".`);
-    notFound(); // Atau tampilkan pesan error kustom seperti di atas
+    notFound(); 
     return null;
   }
 

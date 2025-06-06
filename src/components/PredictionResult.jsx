@@ -1,16 +1,14 @@
 // src/components/PredictionResult.jsx 
-// (Nama file disesuaikan dengan import di page.jsx, sebelumnya PredictionResultDisplay)
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link'; // Impor Link dari next/link
+import Link from 'next/link'; 
 
-// Data informasi penyakit (tetap sama)
 const diseaseDetails = {
   Chickenpox: {
     name: "Chickenpox (Cacar Air)",
-    slug: "chickenpox", // Tambahkan slug untuk routing
+    slug: "chickenpox", 
     defaultDescription: "Infeksi virus yang sangat menular yang menyebabkan ruam gatal dengan lepuh kecil berisi cairan.",
     defaultSuggestions: [
       "Konsultasikan dengan dokter untuk diagnosis dan penanganan yang tepat.",
@@ -22,7 +20,7 @@ const diseaseDetails = {
   },
   Measles: {
     name: "Measles (Campak)",
-    slug: "measles", // Tambahkan slug
+    slug: "measles", 
     defaultDescription: "Infeksi virus masa kanak-kanak yang sangat menular yang dapat dicegah dengan vaksin.",
     defaultSuggestions: [
       "Segera hubungi dokter jika Anda atau anak Anda diduga menderita campak.",
@@ -33,7 +31,7 @@ const diseaseDetails = {
   },
   Monkeypox: {
     name: "Monkeypox (Cacar Monyet)",
-    slug: "monkeypox", // Tambahkan slug
+    slug: "monkeypox", 
     defaultDescription: "Penyakit virus langka yang menyebabkan ruam dan gejala mirip flu.",
     defaultSuggestions: [
       "Segera konsultasikan dengan dokter atau fasilitas kesehatan terdekat.",
@@ -43,9 +41,9 @@ const diseaseDetails = {
     ],
     style: "border-orange-500 bg-orange-50 text-orange-700"
   },
-  Normal: { // Sesuaikan dengan output API Anda, misal 'Normal' atau 'Normal_Skin'
+  Normal: { 
     name: "Kulit Normal",
-    slug: null, // Tidak ada halaman info khusus untuk kulit normal
+    slug: null, 
     defaultDescription: "Tidak terdeteksi adanya kelainan kulit signifikan berdasarkan gambar yang diunggah.",
     defaultSuggestions: [
       "Lanjutkan menjaga kebersihan dan kesehatan kulit Anda.",
@@ -74,14 +72,12 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
     }
   }, [uploadedImageFile]);
 
-  // Menggunakan result.disease langsung sebagai kunci, karena API sudah mengembalikan nama kelas yang benar
-  // Pastikan nama kelas dari API (result.disease) cocok dengan kunci di diseaseDetails
   const details = diseaseDetails[result.disease] || diseaseDetails.unknown;
 
   const displayName = details.name;
   const description = result.description || details.defaultDescription;
   const suggestions = result.suggestions && result.suggestions.length > 0 ? result.suggestions : details.defaultSuggestions;
-  const diseaseSlug = details.slug; // Ambil slug dari details
+  const diseaseSlug = details.slug; 
 
   return (
     <div className={`mt-8 p-6 rounded-lg shadow-lg border-t-4 ${details.style} w-full max-w-md`}>
@@ -120,8 +116,7 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
         <p>Tidak ada saran spesifik. Silakan konsultasi dengan dokter.</p>
       )}
 
-      {/* Tombol Informasi Lebih Lanjut */}
-      {diseaseSlug && result.disease !== "Normal" && ( // Tampilkan jika ada slug dan bukan kulit normal
+      {diseaseSlug && result.disease !== "Normal" && ( 
         <div className="mt-6 text-center">
           <Link 
             href={`/info/${diseaseSlug}`}

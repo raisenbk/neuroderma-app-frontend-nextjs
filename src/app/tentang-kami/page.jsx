@@ -1,6 +1,6 @@
 // src/app/tentang-kami/page.jsx
 import Link from 'next/link';
-import { Lightbulb, ShieldCheck, Users, AlertTriangle, Mail, ArrowLeft } from 'lucide-react'; // Contoh ikon
+import { Lightbulb, ShieldCheck, Users, AlertTriangle, Mail, ArrowLeft } from 'lucide-react'; 
 
 export const metadata = {
   title: 'Tentang Kami - NeuroDerma',
@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function TentangKamiPage() {
   return (
-    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]"> {/* Sesuaikan min-h jika perlu */}
+    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]"> 
       <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-4xl mx-auto ring-1 ring-slate-200">
         <h1 className="text-4xl sm:text-5xl font-bold mb-10 text-center">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">
