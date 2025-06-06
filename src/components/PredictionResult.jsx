@@ -3,66 +3,17 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link'; 
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { CheckCircle2, AlertTriangle } from 'lucide-react';
 
-const diseaseDetails = {
-  Chickenpox: {
-    name: "Chickenpox (Cacar Air)",
-    slug: "chickenpox", 
-    defaultDescription: "Infeksi virus yang sangat menular yang menyebabkan ruam gatal dengan lepuh kecil berisi cairan.",
-    defaultSuggestions: [
-      "Konsultasikan dengan dokter untuk diagnosis dan penanganan yang tepat.",
-      "Istirahat yang cukup dan minum banyak cairan.",
-      "Hindari menggaruk lepuh untuk mencegah bekas luka dan infeksi.",
-      "Gunakan losion kalamin atau mandi oatmeal untuk meredakan gatal.",
-    ],
-    style: "border-red-500 bg-red-50 text-red-700"
-  },
-  Measles: {
-    name: "Measles (Campak)",
-    slug: "measles", 
-    defaultDescription: "Infeksi virus masa kanak-kanak yang sangat menular yang dapat dicegah dengan vaksin.",
-    defaultSuggestions: [
-      "Segera hubungi dokter jika Anda atau anak Anda diduga menderita campak.",
-      "Pastikan penderita mendapatkan istirahat yang cukup dan asupan cairan yang memadai.",
-      "Isolasi diri untuk mencegah penyebaran virus.",
-    ],
-    style: "border-purple-500 bg-purple-50 text-purple-700"
-  },
-  Monkeypox: {
-    name: "Monkeypox (Cacar Monyet)",
-    slug: "monkeypox", 
-    defaultDescription: "Penyakit virus langka yang menyebabkan ruam dan gejala mirip flu.",
-    defaultSuggestions: [
-      "Segera konsultasikan dengan dokter atau fasilitas kesehatan terdekat.",
-      "Isolasi diri untuk mencegah penularan.",
-      "Hindari menggaruk ruam untuk mencegah infeksi sekunder.",
-      "Jaga kebersihan diri dan lingkungan.",
-    ],
-    style: "border-orange-500 bg-orange-50 text-orange-700"
-  },
-  Normal: { 
-    name: "Kulit Normal",
-    slug: null, 
-    defaultDescription: "Tidak terdeteksi adanya kelainan kulit signifikan berdasarkan gambar yang diunggah.",
-    defaultSuggestions: [
-      "Lanjutkan menjaga kebersihan dan kesehatan kulit Anda.",
-      "Gunakan tabir surya untuk melindungi kulit dari paparan sinar UV.",
-      "Jika ada keluhan, konsultasikan dengan dokter kulit.",
-    ],
-    style: "border-green-500 bg-green-50 text-green-700"
-  },
-  unknown: {
-    name: "Tidak Diketahui",
-    slug: null,
-    defaultDescription: "Hasil deteksi tidak dapat dikategorikan secara spesifik.",
-    defaultSuggestions: ["Harap konsultasikan dengan profesional medis untuk evaluasi lebih lanjut."],
-    style: "border-gray-500 bg-gray-100 text-gray-700"
-  }
-};
+import { diseaseDetails } from '@/lib/diseaseInfo.js'; 
 
 export default function PredictionResultDisplay({ result, uploadedImageFile }) {
   const [imageUrl, setImageUrl] = useState(null);
+  const [animatedConfidence, setAnimatedConfidence] = useState(0);
 
   useEffect(() => {
     if (uploadedImageFile) {
@@ -71,67 +22,130 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
       return () => URL.revokeObjectURL(url);
     }
   }, [uploadedImageFile]);
+  
+  // Animate confidence value
+  useEffect(() => {
+    if (result?.confidence) {
+      const targetConfidence = result.confidence * 100;
+      setTimeout(() => setAnimatedConfidence(targetConfidence), 300); // Small delay to start animation
+    }
+  }, [result]);
 
   const details = diseaseDetails[result.disease] || diseaseDetails.unknown;
+  const { Icon, gaugeColor, bgColor, textColor, borderColor } = details;
 
   const displayName = details.name;
   const description = result.description || details.defaultDescription;
   const suggestions = result.suggestions && result.suggestions.length > 0 ? result.suggestions : details.defaultSuggestions;
-  const diseaseSlug = details.slug; 
+  const diseaseSlug = details.slug;
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  };
+  
+  const listVariants = {
+    visible: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 },
+  };
 
   return (
-    <div className={`mt-8 p-6 rounded-lg shadow-lg border-t-4 ${details.style} w-full max-w-md`}>
-      <h3 className="text-2xl font-bold mb-4 text-center">{displayName}</h3>
-
-      {imageUrl && (
-        <div className="mb-6 text-center">
-          <p className="text-sm text-gray-600 mb-2">Gambar yang Dianalisis:</p>
-          <Image
-            src={imageUrl}
-            alt="Gambar kulit yang diunggah"
-            width={250}
-            height={250}
-            className="rounded-md shadow-md object-contain inline-block"
-          />
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      className={`mt-8 p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-4xl border-t-4 ${borderColor} ${bgColor}`}
+    >
+      <div className="grid md:grid-cols-2 md:gap-8">
+        {/* Kolom Kiri: Gambar & Confidence */}
+        <div className="flex flex-col items-center space-y-6">
+          {imageUrl && (
+            <motion.div layoutId="uploaded-image" className="w-full">
+              <Image
+                src={imageUrl}
+                alt="Gambar kulit yang diunggah"
+                width={400}
+                height={400}
+                className="rounded-lg shadow-lg object-contain mx-auto border-2 border-white"
+              />
+            </motion.div>
+          )}
+          <div className="w-48 h-48">
+            <CircularProgressbar
+              value={animatedConfidence}
+              text={`${animatedConfidence.toFixed(1)}%`}
+              strokeWidth={8}
+              styles={buildStyles({
+                pathColor: gaugeColor,
+                textColor: details.textColor,
+                trailColor: '#d1d5db', // gray-300
+                pathTransitionDuration: 1.5,
+                textSize: '20px',
+              })}
+            />
+            <p className={`text-center mt-2 font-semibold ${textColor}`}>Tingkat Kepercayaan</p>
+          </div>
         </div>
-      )}
 
-      <div className="space-y-3">
-        <p>
-          <strong>Deskripsi:</strong> {description}
-        </p>
-        <p>
-          <strong>Tingkat Kepercayaan Model:</strong> {(result.confidence * 100).toFixed(2)}%
-        </p>
+        {/* Kolom Kanan: Detail & Saran */}
+        <div className={`flex flex-col ${textColor}`}>
+          <div className="flex items-center gap-3 mb-4">
+            <Icon size={40} />
+            <h3 className="text-3xl font-bold">{displayName}</h3>
+          </div>
+          
+          <p className="mb-6 text-base leading-relaxed">{description}</p>
+          
+          <div>
+            <h4 className="text-xl font-semibold mb-3">Saran Selanjutnya:</h4>
+            <motion.ul 
+              variants={listVariants} 
+              initial="hidden" 
+              animate="visible" 
+              className="space-y-2"
+            >
+              {suggestions.map((item, index) => (
+                <motion.li key={index} variants={itemVariants} className="flex items-start gap-3">
+                  <CheckCircle2 size={20} className="mt-1 flex-shrink-0 text-green-600" />
+                  <span>{item}</span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </div>
+
+          {diseaseSlug && result.disease !== "Normal" && (
+            <div className="mt-auto pt-6 text-center">
+              <Link
+                href={`/info/${diseaseSlug}`}
+                className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-transform transform hover:scale-105"
+              >
+                Pelajari Lebih Lanjut
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-
-      <h4 className="text-xl font-semibold mt-6 mb-2">Saran Selanjutnya:</h4>
-      {suggestions && suggestions.length > 0 ? (
-        <ul className="list-disc list-inside space-y-1 pl-4">
-          {suggestions.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>Tidak ada saran spesifik. Silakan konsultasi dengan dokter.</p>
-      )}
-
-      {diseaseSlug && result.disease !== "Normal" && ( 
-        <div className="mt-6 text-center">
-          <Link 
-            href={`/info/${diseaseSlug}`}
-            className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
-          >
-            Pelajari Lebih Lanjut tentang {displayName}
-          </Link>
+      
+      {/* Disclaimer / Peringatan Penting */}
+      <div className="mt-8 p-4 rounded-lg bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 flex items-start gap-4">
+        <AlertTriangle size={24} className="flex-shrink-0" />
+        <div>
+          <h5 className="font-bold">PENTING</h5>
+          <p className="text-sm">
+            Hasil deteksi ini bersifat sebagai informasi awal dan <strong>BUKAN merupakan diagnosis medis</strong>.
+            Akurasi model dapat bervariasi. Selalu konsultasikan dengan dokter atau tenaga kesehatan profesional
+            untuk diagnosis yang akurat dan penanganan medis yang tepat.
+          </p>
         </div>
-      )}
-
-      <p className="mt-8 text-sm text-red-600 font-semibold bg-red-50 p-3 rounded-md border border-red-200 text-center">
-        <strong>PENTING:</strong> Hasil deteksi ini bersifat sebagai informasi awal dan BUKAN merupakan diagnosis medis.
-        Akurasi model mungkin bervariasi. Selalu konsultasikan dengan dokter atau tenaga kesehatan profesional
-        untuk diagnosis yang akurat dan penanganan medis yang tepat.
-      </p>
-    </div>
+      </div>
+    </motion.div>
   );
 }

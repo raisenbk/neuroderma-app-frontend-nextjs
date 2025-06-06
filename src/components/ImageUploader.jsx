@@ -1,7 +1,12 @@
 // src/components/ImageUploader.jsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
+import Webcam from 'react-webcam';
+import { UploadCloud, Camera, X, FileImage, Loader } from 'lucide-react';
 
 /**
  * @param {{
@@ -17,120 +22,222 @@ export default function ImageUploader({
   onPredictionComplete,
   onPredictionError,
 }) {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [showWebcam, setShowWebcam] = useState(false);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Ukuran file terlalu besar (maks 5MB).');
-        setSelectedImage(null);
-        setPreview(null);
-        return;
-      }
-      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-        setError('Format file tidak didukung (hanya JPG, PNG, WEBP).');
-        setSelectedImage(null);
-        setPreview(null);
-        return;
-      }
+  const webcamRef = useRef(null);
 
-      setError('');
-      setSelectedImage(file);
-      setPreview(URL.createObjectURL(file));
-      if (onImageUpload) onImageUpload(file);
-    } else {
-      setSelectedImage(null);
-      setPreview(null);
+  const handleFileValidation = (file) => {
+    if (!file) return 'File tidak valid.';
+    if (file.size > 5 * 1024 * 1024) return 'Ukuran file maks 5MB.';
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      return 'Format hanya JPG, PNG, WEBP.';
     }
+    return null; // No error
   };
 
+  const onDrop = useCallback((acceptedFiles) => {
+    const selectedFile = acceptedFiles[0];
+    const validationError = handleFileValidation(selectedFile);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setError('');
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
+    if (onImageUpload) onImageUpload(selectedFile);
+  }, [onImageUpload]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'image/*': ['.jpeg', '.png', '.webp'] },
+    multiple: false,
+  });
+
+  const captureWebcamImage = useCallback(async () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (!imageSrc) {
+      setError('Gagal mengambil gambar dari webcam.');
+      return;
+    }
+    const blob = await (await fetch(imageSrc)).blob();
+    const capturedFile = new File([blob], `webcam-${Date.now()}.png`, { type: 'image/png' });
+
+    const validationError = handleFileValidation(capturedFile);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setError('');
+    setFile(capturedFile);
+    setPreview(imageSrc);
+    setShowWebcam(false);
+    if (onImageUpload) onImageUpload(capturedFile);
+  }, [webcamRef, onImageUpload]);
+
+
   const handleSubmit = async () => {
-    if (!selectedImage) {
-      setError('Silakan pilih gambar terlebih dahulu.');
+    if (!file) {
+      setError('Silakan pilih atau ambil gambar terlebih dahulu.');
       return;
     }
 
     if (onPredictionStart) onPredictionStart();
     setError('');
+    setIsUploading(true);
+    setUploadProgress(0);
 
     const formData = new FormData();
-    formData.append('file', selectedImage);
+    formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8000/predict', { 
-        method: 'POST',
-        body: formData,
+      const response = await axios.post('http://localhost:8000/predict', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        },
       });
-
-      if (!response.ok) {
-        let errorData;
-        try {
-            errorData = await response.json();
-        } catch (e) {
-            errorData = { detail: `Terjadi kesalahan pada server (status: ${response.status}). Coba lagi nanti.` };
-        }
-        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      if (onPredictionComplete) onPredictionComplete(data);
+      if (onPredictionComplete) onPredictionComplete(response.data);
     } catch (err) {
-      console.error('Error uploading and predicting image:', err);
-      const errorMessage = err.message || 'Gagal mengunggah atau memproses gambar. Periksa koneksi Anda atau coba lagi nanti.';
+      const errorMessage = err.response?.data?.detail || err.message || 'Terjadi kesalahan saat prediksi.';
       setError(errorMessage);
       if (onPredictionError) onPredictionError(errorMessage);
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  // JSX tetap sama
+  const clearSelection = () => {
+    setFile(null);
+    setPreview(null);
+    setError('');
+    setUploadProgress(0);
+    if (preview && preview.startsWith('blob:')) {
+      URL.revokeObjectURL(preview);
+    }
+  };
+
   return (
-    <div className="w-full max-w-md p-6 space-y-6 bg-white shadow-xl rounded-lg">
-      <h2 className="text-2xl font-semibold text-center text-gray-700">
-        Unggah Gambar Kulit untuk Deteksi
-      </h2>
-      <div>
-        <label htmlFor="imageUpload" className="sr-only">
-          Pilih gambar
-        </label>
-        <input
-          id="imageUpload"
-          type="file"
-          accept="image/jpeg, image/png, image/webp"
-          onChange={handleImageChange}
-          className="block w-full text-sm text-slate-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-lg file:border-0
-            file:text-sm file:font-semibold
-            file:bg-blue-50 file:text-blue-700
-            hover:file:bg-blue-100 cursor-pointer"
-        />
-      </div>
+    <div className="w-full max-w-lg p-6 space-y-4 bg-white border border-gray-200 rounded-2xl shadow-xl text-gray-800">
+      <AnimatePresence mode="wait">
+        {showWebcam ? (
+          <motion.div
+            key="webcam"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="flex flex-col items-center space-y-4"
+          >
+            <h2 className="text-xl font-bold text-center text-gray-700">Posisikan Kamera</h2>
+            <div className="w-full overflow-hidden rounded-lg border-2 border-blue-500">
+               <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/png"
+                  className="w-full h-auto"
+                  videoConstraints={{ facingMode: 'environment' }}
+               />
+            </div>
+            <div className="flex space-x-4">
+               <button onClick={captureWebcamImage} className="flex items-center justify-center px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                  <Camera className="w-5 h-5 mr-2" />
+                  Ambil Gambar
+               </button>
+               <button onClick={() => setShowWebcam(false)} className="flex items-center justify-center px-4 py-2 font-semibold text-gray-800 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                  <X className="w-5 h-5 mr-2" />
+                  Batal
+               </button>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="uploader"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
 
-      {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+            {preview ? (
+              <div className="space-y-4 flex flex-col items-center">
+                 <motion.div layout layoutId="image-preview" className="relative w-full max-w-sm">
+                   <img
+                     src={preview}
+                     alt="Preview"
+                     className="w-full h-auto max-h-72 object-contain rounded-lg border border-gray-200 shadow-md"
+                   />
+                   <button
+                     onClick={clearSelection}
+                     className="absolute -top-3 -right-3 bg-white rounded-full p-1.5 text-gray-600 border shadow hover:bg-red-500 hover:text-white transition-all duration-300"
+                     aria-label="Hapus gambar"
+                   >
+                     <X className="w-5 h-5" />
+                   </button>
+                 </motion.div>
 
-      {preview && (
-        <div className="mt-4 flex flex-col items-center">
-          <h3 className="text-md font-medium text-gray-600 mb-2">Preview Gambar:</h3>
-          <img
-            src={preview}
-            alt="Preview unggahan"
-            className="max-w-full h-auto max-h-64 rounded-md shadow-md object-contain"
-          />
-        </div>
-      )}
-
-      <button
-        onClick={handleSubmit}
-        disabled={!selectedImage}
-        className="w-full px-6 py-3 text-white font-semibold bg-blue-600 rounded-lg shadow-md
-                   hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
-                   disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
-      >
-        Deteksi Penyakit
-      </button>
+                {isUploading ? (
+                  <div className="w-full space-y-2">
+                     <p className="text-center text-blue-600">Menganalisis... {uploadProgress}%</p>
+                     <div className="w-full bg-gray-200 rounded-full h-2.5">
+                       <motion.div
+                         className="bg-blue-500 h-2.5 rounded-full"
+                         initial={{ width: 0 }}
+                         animate={{ width: `${uploadProgress}%` }}
+                         transition={{ ease: "linear" }}
+                       />
+                     </div>
+                  </div>
+                ) : (
+                   <button
+                     onClick={handleSubmit}
+                     className="w-full px-6 py-3 font-bold text-white bg-gradient-to-r from-blue-600 to-teal-500 rounded-lg shadow-md hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:scale-105"
+                   >
+                     Deteksi Penyakit
+                   </button>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div
+                  {...getRootProps()}
+                  className={`relative flex flex-col items-center justify-center w-full h-56 px-4 py-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-300
+                    ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`}
+                >
+                  <input {...getInputProps()} />
+                  <div className="flex flex-col items-center text-center text-gray-500">
+                    <UploadCloud className={`w-12 h-12 mb-3 transition-transform duration-300 ${isDragActive ? 'scale-110 text-blue-500' : ''}`} />
+                    <p className="font-semibold">Seret & lepas gambar di sini</p>
+                    <p className="text-sm">atau klik untuk memilih file</p>
+                    <p className="mt-2 text-xs text-gray-400">JPG, PNG, WEBP (Maks 5MB)</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                    <hr className="flex-grow border-gray-200"/>
+                    <span className="text-gray-500">ATAU</span>
+                    <hr className="flex-grow border-gray-200"/>
+                </div>
+                <button
+                  onClick={() => setShowWebcam(true)}
+                  className="w-full flex items-center justify-center px-6 py-3 font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors border border-gray-300"
+                >
+                  <Camera className="w-5 h-5 mr-2" />
+                  Gunakan Kamera
+                </button>
+              </div>
+            )}
+            {error && <p className="mt-3 text-sm font-medium text-red-600 text-center">{error}</p>}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
