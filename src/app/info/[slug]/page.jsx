@@ -2,7 +2,8 @@
 import { notFound } from 'next/navigation';
 import Markdown from 'markdown-to-jsx';
 import Link from 'next/link';
-import { Thermometer, Activity, ShieldAlert, Users, UserCheck, ArrowLeft, Info, Zap, AlertCircle } from 'lucide-react';
+import { Thermometer, Virus, ShieldCheck, Users, AlertTriangle, ArrowLeft, Info, Activity, Zap } from 'lucide-react';
+
 
 const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
 
@@ -40,101 +41,145 @@ async function getDiseaseBySlug(slug) {
   }
 }
 
-function InfoSection({ title, content, icon: IconComponent, iconColor = "text-blue-500" }) {
-  if (!content) return <p className="text-slate-500 italic">Informasi {title.toLowerCase()} belum tersedia.</p>;
+function InfoSection({ id, title, content, icon: IconComponent, iconColor = "text-sky-500" }) {
+  if (!content) return null;
   return (
-    <section className="mb-8 p-6 bg-slate-50/80 rounded-lg ring-1 ring-slate-200/60 shadow-sm hover:shadow-md transition-shadow duration-300">
-      <h2 className="flex items-center text-2xl sm:text-3xl font-semibold mb-4 text-slate-800">
-        {IconComponent && <IconComponent className={`w-7 h-7 mr-3 ${iconColor}`} />}
-        {title}
-      </h2>
-      <div className="prose prose-slate lg:prose-lg max-w-none text-slate-700 leading-relaxed 
-                    prose-headings:text-slate-700 prose-headings:font-semibold
-                    prose-strong:text-slate-700
-                    prose-a:text-blue-600 prose-a:hover:text-blue-500
-                    prose-ul:list-disc prose-ul:pl-5 prose-li:marker:text-blue-500
-                    prose-ol:list-decimal prose-ol:pl-5 prose-li:marker:text-blue-500
-                    prose-blockquote:border-l-blue-500 prose-blockquote:text-slate-600 prose-blockquote:not-italic">
-        <Markdown>{content}</Markdown>
+    <section id={id} className="mb-8 scroll-mt-24">
+      <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden ring-1 ring-slate-200/50">
+        <div className="p-6">
+          <h2 className="flex items-center text-2xl font-bold text-slate-800 mb-4">
+            {IconComponent && <IconComponent className={`w-7 h-7 mr-3 ${iconColor}`} />}
+            {title}
+          </h2>
+          <div className="prose prose-slate lg:prose-lg max-w-none text-slate-600 leading-relaxed
+                          prose-headings:text-slate-700 prose-strong:text-slate-700
+                          prose-a:text-sky-600 prose-a:hover:text-sky-500 transition-colors
+                          prose-ul:list-disc prose-ul:pl-5 prose-li:marker:text-sky-500">
+            <Markdown>{content}</Markdown>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
+// Komponen Peringatan Khusus untuk "Kapan Harus ke Dokter"
+function DoctorAlert({ id, title, content, icon: IconComponent }) {
+  if (!content) return null;
+  return (
+    <section id={id} className="mb-8 scroll-mt-24">
+        <div className="bg-red-50 border-l-4 border-red-500 rounded-r-lg p-6 shadow-md">
+            <h2 className="flex items-center text-2xl font-bold text-red-800 mb-4">
+                {IconComponent && <IconComponent className="w-7 h-7 mr-3 text-red-600" />}
+                {title}
+            </h2>
+            <div className="prose prose-slate max-w-none text-red-700
+                            prose-strong:text-red-700
+                            prose-a:text-red-900 prose-a:hover:underline">
+                <Markdown>{content}</Markdown>
+            </div>
+        </div>
+    </section>
+  );
+}
 
-export default async function DiseasePage({ params: paramsPromise }) {
-  const params = await paramsPromise;
+// Komponen untuk Navigasi Cepat di Sisi Kiri
+function QuickNav() {
+  const navItems = [
+    { id: 'symptoms', label: 'Gejala', icon: Activity },
+    { id: 'causes', label: 'Penyebab', icon: Zap },
+    { id: 'transmission', label: 'Penularan', icon: Users },
+    { id: 'prevention', label: 'Pencegahan', icon: ShieldCheck },
+    { id: 'when-to-see-doctor', label: 'Kapan ke Dokter?', icon: AlertTriangle },
+  ];
 
-  if (!params || typeof params.slug === 'undefined') {
-    console.error('Slug is not available in params.');
-    notFound();
-    return null;
-  }
+  return (
+    <div className="sticky top-24">
+      <div className="bg-white/70 backdrop-blur-lg p-4 rounded-xl shadow-md ring-1 ring-slate-200/50">
+        <h3 className="font-bold text-slate-700 px-3 mb-2">Navigasi Cepat</h3>
+        <ul className="space-y-1">
+          {navItems.map(item => (
+            <li key={item.id}>
+              <a 
+                href={`#${item.id}`} 
+                className="flex items-center px-3 py-2 text-slate-600 hover:bg-sky-100 hover:text-sky-700 rounded-md transition-all duration-200 font-medium"
+              >
+                <item.icon className="w-5 h-5 mr-3" />
+                <span>{item.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
 
+export default async function DiseasePage({ params }) {
   const slug = params.slug;
+  if (!slug) notFound();
+
   const diseaseData = await getDiseaseBySlug(slug);
 
   if (!diseaseData) {
+    // Tampilan "Tidak Ditemukan" (bisa dibuat lebih baik juga jika perlu)
     return (
-        <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)] flex flex-col items-center justify-center">
-            <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-md mx-auto ring-1 ring-slate-200 text-center">
-                <AlertCircle className="w-16 h-16 mx-auto mb-4 text-red-500" />
-                <h1 className="text-3xl font-bold text-slate-800 mb-4">Informasi Tidak Ditemukan</h1>
-                <p className="text-slate-600 mb-6">Maaf, informasi untuk penyakit dengan slug "{slug}" tidak dapat ditemukan saat ini.</p>
-                <div className="mt-12 text-center">
-                    <div className="inline-flex w-full animate-rotate-border duration-500 ease-out transform-3d rounded-lg max-w-sm cursor-pointer hover:scale-[1.03] hover:bg-conic/[from_var(--border-angle)] from-white via-red-600 to-white from-80% via-90% to-100% p-px transition-all">
-                      <Link
-                        href="/"
-                        className="flex items-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600"
-                      >
-                        <ArrowLeft className="w-5 h-5 mr-2" />
-                        Kembali ke Halaman Utama
-                      </Link>
-                    </div>
-                </div>
-            </div>
+        <main className="py-20 px-4 text-center">
+            <h1 className="text-3xl font-bold text-slate-800">Informasi Tidak Ditemukan</h1>
+            <p className="text-slate-600 mt-2">Maaf, kami tidak dapat menemukan informasi untuk "{slug}".</p>
+            <Link href="/" className="mt-6 inline-block bg-sky-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors">
+                Kembali ke Beranda
+            </Link>
         </main>
     );
   }
 
   const { name, symptoms, causes, transmission, prevention, whenToSeeDoctor } = diseaseData;
 
-  if (typeof name === 'undefined') {
-    console.error(`Field "name" is missing in diseaseData for slug "${slug}".`);
-    notFound(); 
-    return null;
-  }
-
   return (
-    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]">
-      <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-4xl mx-auto ring-1 ring-slate-200">
-        <header className="mb-10 text-center">
-          <Info className="w-16 h-16 mx-auto mb-4 text-blue-500" />
-          <h1 className="text-4xl sm:text-5xl font-bold">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">
-              Informasi: {name}
-            </span>
+    <main className="bg-slate-50 min-h-screen">
+      {/* Header Halaman */}
+      <header className="py-10 sm:py-16 bg-gradient-to-br from-sky-500 to-teal-400">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Info className="w-16 h-16 mx-auto mb-4 text-white/80" />
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white text-shadow-md">
+            {name}
           </h1>
-        </header>
-        
-        <div className="space-y-8">
-          <InfoSection title="Gejala" content={symptoms} icon={Activity} iconColor="text-red-500" />
-          <InfoSection title="Penyebab" content={causes} icon={Zap} iconColor="text-yellow-600" />
-          <InfoSection title="Cara Penularan" content={transmission} icon={Users} iconColor="text-purple-500" />
-          <InfoSection title="Pencegahan Umum" content={prevention} icon={ShieldAlert} iconColor="text-green-500" />
-          <InfoSection title="Kapan Harus ke Dokter?" content={whenToSeeDoctor} icon={UserCheck} iconColor="text-indigo-500" />
+          <p className="mt-3 text-lg text-sky-100 max-w-2xl mx-auto">
+            Informasi lengkap mengenai gejala, penyebab, dan cara pencegahan.
+          </p>
         </div>
+      </header>
+      
+      {/* Konten Utama */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12">
+          
+          {/* Kolom Navigasi (Hanya di Desktop) */}
+          <aside className="hidden lg:block lg:col-span-3">
+            <QuickNav />
+          </aside>
 
-        <div className="mt-12 text-center">
-            <div className="inline-flex w-full animate-rotate-border duration-500 ease-out transform-3d rounded-lg max-w-sm cursor-pointer hover:scale-[1.03] hover:bg-conic/[from_var(--border-angle)] from-white via-red-600 to-white from-80% via-90% to-100% p-px transition-all">
+          {/* Kolom Konten Utama */}
+          <div className="lg:col-span-9">
+            <InfoSection id="symptoms" title="Gejala Umum" content={symptoms} icon={Activity} iconColor="text-red-500" />
+            <InfoSection id="causes" title="Akar Penyebab" content={causes} icon={Zap} iconColor="text-orange-500" />
+            <InfoSection id="transmission" title="Cara Penularan" content={transmission} icon={Users} iconColor="text-purple-500" />
+            <InfoSection id="prevention" title="Langkah Pencegahan" content={prevention} icon={ShieldCheck} iconColor="text-green-500" />
+            <DoctorAlert id="when-to-see-doctor" title="Kapan Harus ke Dokter?" content={whenToSeeDoctor} icon={AlertTriangle} />
+          
+            {/* Tombol Kembali */}
+            <div className="mt-12 text-center">
               <Link
                 href="/"
-                className="flex items-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600"
+                className="inline-flex items-center px-8 py-3 bg-sky-600 text-white font-bold rounded-full shadow-lg hover:bg-sky-700 transition-all duration-300 transform hover:scale-105"
               >
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 Kembali ke Halaman Utama
               </Link>
             </div>
+          </div>
+
         </div>
       </div>
     </main>
