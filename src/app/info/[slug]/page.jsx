@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Markdown from 'markdown-to-jsx';
 import Link from 'next/link';
 import { Thermometer, Virus, ShieldCheck, Users, AlertTriangle, ArrowLeft, Info, Activity, Zap } from 'lucide-react';
+import DiseaseInfoAccordion from '@/components/DiseaseInfoAccordion';
 
 
 const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
@@ -41,20 +42,26 @@ async function getDiseaseBySlug(slug) {
   }
 }
 
-function InfoSection({ id, title, content, icon: IconComponent, iconColor = "text-sky-500" }) {
+function InfoSection({ id, title, content, icon: IconComponent, iconColor, iconBgColor }) {
   if (!content) return null;
   return (
     <section id={id} className="mb-8 scroll-mt-24">
-      <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden ring-1 ring-slate-200/50">
-        <div className="p-6">
-          <h2 className="flex items-center text-2xl font-bold text-slate-800 mb-4">
-            {IconComponent && <IconComponent className={`w-7 h-7 mr-3 ${iconColor}`} />}
+      <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden ring-1 ring-slate-200/50">
+        {/* Header Section dengan Ikon dan Judul */}
+        <div className="flex items-center p-4 sm:p-5 bg-slate-50 border-b border-slate-200">
+          <div className={`flex-shrink-0 p-3 rounded-full ${iconBgColor || 'bg-sky-100'}`}>
+            <IconComponent className={`w-6 h-6 ${iconColor || 'text-sky-600'}`} />
+          </div>
+          <h2 className="ml-4 text-xl sm:text-2xl font-bold text-slate-800">
             {title}
           </h2>
+        </div>
+        {/* Konten Markdown */}
+        <div className="p-5 sm:p-6">
           <div className="prose prose-slate lg:prose-lg max-w-none text-slate-600 leading-relaxed
-                          prose-headings:text-slate-700 prose-strong:text-slate-700
-                          prose-a:text-sky-600 prose-a:hover:text-sky-500 transition-colors
-                          prose-ul:list-disc prose-ul:pl-5 prose-li:marker:text-sky-500">
+                         prose-headings:text-slate-700 prose-strong:text-slate-700
+                         prose-a:text-sky-600 prose-a:no-underline hover:prose-a:underline
+                         prose-ul:list-disc prose-ul:pl-5 prose-li:marker:text-sky-500">
             <Markdown>{content}</Markdown>
           </div>
         </div>
@@ -63,22 +70,30 @@ function InfoSection({ id, title, content, icon: IconComponent, iconColor = "tex
   );
 }
 
+
 // Komponen Peringatan Khusus untuk "Kapan Harus ke Dokter"
 function DoctorAlert({ id, title, content, icon: IconComponent }) {
   if (!content) return null;
   return (
     <section id={id} className="mb-8 scroll-mt-24">
-        <div className="bg-red-50 border-l-4 border-red-500 rounded-r-lg p-6 shadow-md">
-            <h2 className="flex items-center text-2xl font-bold text-red-800 mb-4">
-                {IconComponent && <IconComponent className="w-7 h-7 mr-3 text-red-600" />}
-                {title}
-            </h2>
-            <div className="prose prose-slate max-w-none text-red-700
-                            prose-strong:text-red-700
-                            prose-a:text-red-900 prose-a:hover:underline">
-                <Markdown>{content}</Markdown>
+      <div className="bg-red-50 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden ring-1 ring-red-200/50">
+         {/* Header Section dengan Ikon dan Judul */}
+        <div className="flex items-center p-4 sm:p-5 bg-red-100/70 border-b border-red-200/80">
+          <div className="flex-shrink-0 p-3 rounded-full bg-red-200">
+             <IconComponent className="w-6 h-6 text-red-600" />
+          </div>
+          <h2 className="ml-4 text-xl sm:text-2xl font-bold text-red-800">
+            {title}
+          </h2>
+        </div>
+        {/* Konten Markdown */}
+        <div className="p-5 sm:p-6">
+            <div className="prose prose-red max-w-none text-red-800
+                            prose-strong:text-red-800 prose-a:text-red-900">
+              <Markdown>{content}</Markdown>
             </div>
         </div>
+      </div>
     </section>
   );
 }
@@ -95,17 +110,21 @@ function QuickNav() {
 
   return (
     <div className="sticky top-24">
-      <div className="bg-white/70 backdrop-blur-lg p-4 rounded-xl shadow-md ring-1 ring-slate-200/50">
-        <h3 className="font-bold text-slate-700 px-3 mb-2">Navigasi Cepat</h3>
+      <div className="bg-white/80 backdrop-blur-lg p-4 rounded-xl shadow-md ring-1 ring-slate-900/5">
+        <h3 className="font-bold text-slate-800 px-3 mb-2 text-lg">Navigasi Cepat</h3>
         <ul className="space-y-1">
           {navItems.map(item => (
             <li key={item.id}>
               <a 
                 href={`#${item.id}`} 
-                className="flex items-center px-3 py-2 text-slate-600 hover:bg-sky-100 hover:text-sky-700 rounded-md transition-all duration-200 font-medium"
+                className="group flex items-center px-3 py-2 text-slate-700 hover:bg-sky-50 rounded-lg transition-colors duration-200"
               >
-                <item.icon className="w-5 h-5 mr-3" />
-                <span>{item.label}</span>
+                <div className={`p-1.5 mr-3 rounded-md bg-slate-100 group-hover:bg-sky-100 group-hover:text-sky-600 transition-colors duration-200 ${
+                    item.id === 'when-to-see-doctor' ? 'group-hover:!bg-red-100 group-hover:!text-red-600' : ''
+                }`}>
+                  <item.icon className="w-5 h-5" />
+                </div>
+                <span className="font-medium">{item.label}</span>
               </a>
             </li>
           ))}
@@ -122,7 +141,6 @@ export default async function DiseasePage({ params }) {
   const diseaseData = await getDiseaseBySlug(slug);
 
   if (!diseaseData) {
-    // Tampilan "Tidak Ditemukan" (bisa dibuat lebih baik juga jika perlu)
     return (
         <main className="py-20 px-4 text-center">
             <h1 className="text-3xl font-bold text-slate-800">Informasi Tidak Ditemukan</h1>
@@ -139,35 +157,27 @@ export default async function DiseasePage({ params }) {
   return (
     <main className="bg-slate-50 min-h-screen">
       {/* Header Halaman */}
-      <header className="py-10 sm:py-16 bg-gradient-to-br from-sky-500 to-teal-400">
+      <header className="py-12 sm:py-16 bg-gradient-to-br from-sky-500 to-teal-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Info className="w-16 h-16 mx-auto mb-4 text-white/80" />
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white text-shadow-md">
-            {name}
+          <div className="inline-block p-4 bg-white/20 rounded-2xl mb-4">
+             <Info className="w-12 h-12 mx-auto text-white" />
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            {diseaseData.name}
           </h1>
-          <p className="mt-3 text-lg text-sky-100 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-sky-100 max-w-3xl mx-auto">
             Informasi lengkap mengenai gejala, penyebab, dan cara pencegahan.
           </p>
         </div>
       </header>
       
-      {/* Konten Utama */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12">
-          
-          {/* Kolom Navigasi (Hanya di Desktop) */}
-          <aside className="hidden lg:block lg:col-span-3">
-            <QuickNav />
-          </aside>
+      {/* Konten Utama - Menggunakan Komponen Akordeon Baru */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="w-full">
 
-          {/* Kolom Konten Utama */}
-          <div className="lg:col-span-9">
-            <InfoSection id="symptoms" title="Gejala Umum" content={symptoms} icon={Activity} iconColor="text-red-500" />
-            <InfoSection id="causes" title="Akar Penyebab" content={causes} icon={Zap} iconColor="text-orange-500" />
-            <InfoSection id="transmission" title="Cara Penularan" content={transmission} icon={Users} iconColor="text-purple-500" />
-            <InfoSection id="prevention" title="Langkah Pencegahan" content={prevention} icon={ShieldCheck} iconColor="text-green-500" />
-            <DoctorAlert id="when-to-see-doctor" title="Kapan Harus ke Dokter?" content={whenToSeeDoctor} icon={AlertTriangle} />
-          
+            {/* Cukup panggil komponen akordeon di sini */}
+            <DiseaseInfoAccordion data={diseaseData} />
+        
             {/* Tombol Kembali */}
             <div className="mt-12 text-center">
               <Link
@@ -178,8 +188,6 @@ export default async function DiseasePage({ params }) {
                 Kembali ke Halaman Utama
               </Link>
             </div>
-          </div>
-
         </div>
       </div>
     </main>
