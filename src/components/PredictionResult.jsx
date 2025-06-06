@@ -22,8 +22,7 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
       return () => URL.revokeObjectURL(url);
     }
   }, [uploadedImageFile]);
-  
-  // Animate confidence value
+ 
   useEffect(() => {
     if (result?.confidence) {
       const targetConfidence = result.confidence * 100;
@@ -65,7 +64,6 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
       className={`mt-8 p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-4xl border-t-4 ${borderColor} ${bgColor}`}
     >
       <div className="grid md:grid-cols-2 md:gap-8">
-        {/* Kolom Kiri: Gambar & Confidence */}
         <div className="flex flex-col items-center space-y-6">
           {imageUrl && (
             <motion.div layoutId="uploaded-image" className="w-full">
@@ -86,7 +84,7 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
               styles={buildStyles({
                 pathColor: gaugeColor,
                 textColor: details.textColor,
-                trailColor: '#d1d5db', // gray-300
+                trailColor: '#d1d5db', 
                 pathTransitionDuration: 1.5,
                 textSize: '20px',
               })}
@@ -95,7 +93,6 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
           </div>
         </div>
 
-        {/* Kolom Kanan: Detail & Saran */}
         <div className={`flex flex-col ${textColor}`}>
           <div className="flex items-center gap-3 mb-4">
             <Icon size={40} />
@@ -134,7 +131,6 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
         </div>
       </div>
       
-      {/* Disclaimer / Peringatan Penting */}
       <div className="mt-8 p-4 rounded-lg bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 flex items-start gap-4">
         <AlertTriangle size={24} className="flex-shrink-0" />
         <div>

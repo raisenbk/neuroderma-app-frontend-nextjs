@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+html.dark{
+  --background: #131723;
 }
 
 @property --border-angle{
@@ -40,4 +46,51 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.markdown-content h2 {
+  @apply text-2xl font-bold text-slate-800 mt-6 mb-3;
+}
+.markdown-content h3 {
+  @apply text-xl font-bold text-slate-700 mt-5 mb-2;
+}
+.markdown-content p {
+  @apply mb-4 leading-relaxed text-slate-600;
+}
+.markdown-content ul {
+  @apply list-disc pl-5 mb-4 space-y-2;
+}
+.markdown-content li {
+  @apply text-slate-600;
+}
+.markdown-content li::marker {
+  @apply text-sky-500;
+}
+.markdown-content a {
+  @apply text-sky-600 font-semibold underline;
+}
+.markdown-content strong {
+  @apply font-bold text-slate-700;
+}
+
+
+/* Styling untuk konten Markdown - Dark Mode */
+.dark .markdown-content h2 {
+  @apply text-slate-100;
+}
+.dark .markdown-content h3 {
+  @apply text-slate-200;
+}
+.dark .markdown-content p,
+.dark .markdown-content li {
+  @apply text-slate-300;
+}
+.dark .markdown-content li::marker {
+  @apply text-sky-400;
+}
+.dark .markdown-content a {
+  @apply text-sky-400;
+}
+.dark .markdown-content strong {
+  @apply text-slate-200;
 }

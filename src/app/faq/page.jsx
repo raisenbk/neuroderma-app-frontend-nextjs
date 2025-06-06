@@ -3,23 +3,25 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ChevronDown, HelpCircle, MessageSquare, ArrowLeft } from 'lucide-react'; 
+import { ChevronDown, HelpCircle, ArrowLeft } from 'lucide-react'; 
 
 function FaqItem({ faq, index, isOpen, onToggle }) {
   return (
-    <div className="bg-slate-50/70 rounded-lg ring-1 ring-slate-200/50 overflow-hidden">
+    <div className="bg-slate-50/70 dark:bg-slate-800/50 rounded-lg ring-1 ring-slate-200/50 dark:ring-slate-700/50 overflow-hidden">
       <h2>
         <button
           type="button"
-          className="flex items-center justify-between w-full py-5 px-4 sm:px-6 text-left font-semibold text-slate-700 hover:text-blue-600 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 transition-colors duration-200"
+          className="flex items-center justify-between w-full py-5 px-4 sm:px-6 text-left font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75 transition-colors duration-200"
           onClick={() => onToggle(index)}
           aria-expanded={isOpen}
           aria-controls={`faq-answer-${index}`}
         >
           <span className="text-lg sm:text-xl">{faq.question}</span>
           <ChevronDown
-            className={`w-6 h-6 text-slate-400 transform transition-transform duration-300 ${
-              isOpen ? 'rotate-180 text-blue-500' : 'text-slate-500'
+            className={`w-6 h-6 transform transition-transform duration-300 ${
+              isOpen 
+                ? 'rotate-180 text-blue-500 dark:text-blue-400' 
+                : 'text-slate-500 dark:text-slate-400'
             }`}
           />
         </button>
@@ -32,7 +34,7 @@ function FaqItem({ faq, index, isOpen, onToggle }) {
         role="region"
         aria-labelledby={`faq-question-${index}`}
       >
-        <div className="px-4 sm:px-6 pt-0 pb-5 text-slate-600 leading-relaxed text-base">
+        <div className="px-4 sm:px-6 pt-0 pb-5 text-slate-600 dark:text-slate-300 leading-relaxed text-base">
           {faq.answer}
         </div>
       </div>
@@ -75,16 +77,16 @@ export default function FAQPage() {
   };
 
   return (
-    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 min-h-[calc(100vh-150px)]">
-      <div className="bg-white/90 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200 ">
+    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 dark:from-slate-900 dark:to-sky-950 min-h-[calc(100vh-150px)]">
+      <div className="bg-white/90 dark:bg-slate-800/80 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200 dark:ring-slate-700">
         <div className="text-center mb-12">
-          <HelpCircle className="w-16 h-16 mx-auto mb-4 text-blue-500" /> 
+          <HelpCircle className="w-16 h-16 mx-auto mb-4 text-blue-500 dark:text-blue-400" /> 
           <h1 className="text-4xl sm:text-5xl font-bold">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500 dark:from-blue-400 dark:to-teal-400">
               Pertanyaan Umum
             </span>
           </h1>
-          <p className="mt-4 text-lg text-slate-600"> 
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300"> 
             Temukan jawaban untuk pertanyaan yang sering diajukan mengenai NeuroDerma.
           </p>
         </div>
@@ -102,22 +104,20 @@ export default function FAQPage() {
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-slate-600 mb-6 text-lg"> {/* Warna teks disesuaikan */}
+          <p className="text-slate-600 dark:text-slate-300 mb-6 text-lg">
             Tidak menemukan jawaban yang Anda cari?
-            <Link href="/kontak" className="ml-1 text-blue-600 hover:text-blue-500 font-medium underline transition-colors">
+            <Link href="/kontak" className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium underline transition-colors">
               Hubungi kami
             </Link>.
           </p>
           <div className="mt-12 text-center">
-              <div className="inline-flex w-full animate-rotate-border duration-500 ease-out transform-3d rounded-lg max-w-sm cursor-pointer hover:scale-[1.03] hover:bg-conic/[from_var(--border-angle)] from-white via-red-600 to-white from-80% via-90% to-100% p-px transition-all">
-                <Link
-                  href="/"
-                  className="flex items-center w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600"
-                >
-                  <ArrowLeft className="w-5 h-5 mr-2" />
-                  Kembali ke Halaman Utama
-                </Link>
-              </div>
+              <Link
+                href="/"
+                className="inline-flex items-center w-full max-w-sm px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white font-semibold shadow-md rounded-lg transition-all duration-300 hover:from-blue-600 hover:to-teal-600 hover:scale-105"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Kembali ke Halaman Utama
+              </Link>
           </div>
         </div>
       </div>
