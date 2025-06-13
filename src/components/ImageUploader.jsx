@@ -87,6 +87,16 @@ export default function ImageUploader({
       return;
     }
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    // ✨ Add a check to ensure the URL is configured
+    if (!apiUrl) {
+        const errorMessage = "URL API tidak dikonfigurasi. Silakan periksa variabel lingkungan Anda.";
+        setError(errorMessage);
+        if (onPredictionError) onPredictionError(errorMessage);
+        return;
+    }
+
     if (onPredictionStart) onPredictionStart();
     setError('');
     setIsUploading(true);
