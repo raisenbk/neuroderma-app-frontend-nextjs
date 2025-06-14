@@ -45,6 +45,9 @@ export default function HomePage() {
           <p className="text-lg text-gray-600 dark:text-slate-400">
             Unggah gambar kulit Anda untuk mendapatkan analisis awal.
           </p>
+          <p className="text-sm text-gray-500 dark:text-slate-500">
+            Saat ini mendukung deteksi untuk: Cacar Monyet (Monkeypox), Cacar Air (Chickenpox), dan Campak (Measles).
+          </p>
         </header>
 
         <ImageUploader

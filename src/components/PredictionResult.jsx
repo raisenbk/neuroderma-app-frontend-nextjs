@@ -76,6 +76,7 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
               />
             </motion.div>
           )}
+                      <p className={`text-center mt-2 font-semibold ${textColor}`}>Tingkat Kepercayaan</p>
           <div className="w-48 h-48">
             <CircularProgressbar
               value={animatedConfidence}
@@ -89,8 +90,8 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
                 textSize: '20px',
               })}
             />
-            <p className={`text-center mt-2 font-semibold ${textColor}`}>Tingkat Kepercayaan</p>
           </div>
+
         </div>
 
         <div className={`flex flex-col ${textColor}`}>

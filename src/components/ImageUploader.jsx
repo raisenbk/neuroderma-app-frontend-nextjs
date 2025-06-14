@@ -6,7 +6,8 @@ import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import Webcam from 'react-webcam';
-import { UploadCloud, Camera, X } from 'lucide-react';
+// 1. Impor ikon baru
+import { UploadCloud, Camera, X, RefreshCw } from 'lucide-react';
 
 /**
  * @param {{
@@ -28,6 +29,9 @@ export default function ImageUploader({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showWebcam, setShowWebcam] = useState(false);
+  
+  // 2. State untuk mengontrol kamera (depan/belakang)
+  const [facingMode, setFacingMode] = useState('environment'); // 'environment' untuk belakang, 'user' untuk depan
 
   const webcamRef = useRef(null);
 
@@ -80,6 +84,10 @@ export default function ImageUploader({
     if (onImageUpload) onImageUpload(capturedFile);
   }, [webcamRef, onImageUpload]);
 
+  // 3. Fungsi untuk mengganti kamera
+  const handleCameraSwitch = () => {
+    setFacingMode(prevMode => (prevMode === 'environment' ? 'user' : 'environment'));
+  };
 
   const handleSubmit = async () => {
     if (!file) {
@@ -89,7 +97,6 @@ export default function ImageUploader({
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/predict`;
 
-    // ✨ Add a check to ensure the URL is configured
     if (!apiUrl) {
         const errorMessage = "URL API tidak dikonfigurasi. Silakan periksa variabel lingkungan Anda.";
         setError(errorMessage);
@@ -150,23 +157,29 @@ export default function ImageUploader({
           >
             <h2 className="text-xl font-bold text-center text-gray-700 dark:text-slate-200">Posisikan Kamera</h2>
             <div className="w-full overflow-hidden rounded-lg border-2 border-blue-500 dark:border-blue-400">
-                <Webcam
-                  audio={false}
-                  ref={webcamRef}
-                  screenshotFormat="image/png"
-                  className="w-full h-auto"
-                  videoConstraints={{ facingMode: 'environment' }}
-                />
+              <Webcam
+                audio={false}
+                ref={webcamRef}
+                screenshotFormat="image/png"
+                className="w-full h-auto"
+                // 4. Gunakan state `facingMode` secara dinamis
+                videoConstraints={{ facingMode: facingMode }}
+              />
             </div>
-            <div className="flex space-x-4">
-                <button onClick={captureWebcamImage} className="flex items-center justify-center px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-                  <Camera className="w-5 h-5 mr-2" />
-                  Ambil Gambar
-                </button>
-                <button onClick={() => setShowWebcam(false)} className="flex items-center justify-center px-4 py-2 font-semibold text-gray-800 dark:text-slate-100 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
-                  <X className="w-5 h-5 mr-2" />
-                  Batal
-                </button>
+            {/* 5. Grup tombol baru dengan tombol Ganti Kamera */}
+            <div className="flex flex-wrap justify-center gap-4">
+              <button onClick={captureWebcamImage} className="flex items-center justify-center px-4 py-2 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                <Camera className="w-5 h-5 mr-2" />
+                Ambil Gambar
+              </button>
+              <button onClick={handleCameraSwitch} className="flex items-center justify-center px-4 py-2 font-semibold text-gray-800 dark:text-slate-100 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+                <RefreshCw className="w-5 h-5 mr-2" />
+                Ganti Kamera
+              </button>
+              <button onClick={() => setShowWebcam(false)} className="flex items-center justify-center px-4 py-2 font-semibold text-gray-800 dark:text-slate-100 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+                <X className="w-5 h-5 mr-2" />
+                Batal
+              </button>
             </div>
           </motion.div>
         ) : (
