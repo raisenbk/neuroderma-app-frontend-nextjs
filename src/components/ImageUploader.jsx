@@ -87,7 +87,7 @@ export default function ImageUploader({
       return;
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/predict`;
 
     // ✨ Add a check to ensure the URL is configured
     if (!apiUrl) {
