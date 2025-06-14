@@ -3,15 +3,16 @@ import { Bug, ShieldCheck, HelpCircle } from 'lucide-react';
 
 export const diseaseDetails = {
   Chickenpox: {
-    name: "Chickenpox (Cacar Air)",
+    // Gunakan kunci dari file JSON
+    name: "disease_chickenpox_name",
     slug: "chickenpox",
     Icon: Bug,
-    defaultDescription: "Infeksi virus sangat menular yang menyebabkan ruam gatal dengan lepuh kecil berisi cairan.",
+    defaultDescription: "disease_chickenpox_description",
     defaultSuggestions: [
-      "Konsultasikan dengan dokter untuk diagnosis dan penanganan yang tepat.",
-      "Istirahat yang cukup dan minum banyak cairan.",
-      "Hindari menggaruk lepuh untuk mencegah bekas luka dan infeksi.",
-      "Gunakan losion kalamin atau mandi oatmeal untuk meredakan gatal.",
+      "disease_chickenpox_suggestion_1",
+      "disease_chickenpox_suggestion_2",
+      "disease_chickenpox_suggestion_3",
+      "disease_chickenpox_suggestion_4",
     ],
     bgColor: "bg-red-50",
     textColor: "text-red-800",
@@ -19,14 +20,14 @@ export const diseaseDetails = {
     gaugeColor: "#ef4444"
   },
   Measles: {
-    name: "Measles (Campak)",
+    name: "disease_measles_name",
     slug: "measles",
     Icon: Bug,
-    defaultDescription: "Infeksi virus masa kanak-kanak yang sangat menular dan dapat dicegah dengan vaksin.",
+    defaultDescription: "disease_measles_description",
     defaultSuggestions: [
-      "Segera hubungi dokter jika Anda atau anak Anda diduga menderita campak.",
-      "Pastikan penderita mendapatkan istirahat yang cukup dan asupan cairan yang memadai.",
-      "Isolasi diri untuk mencegah penyebaran virus.",
+        "disease_measles_suggestion_1",
+        "disease_measles_suggestion_2",
+        "disease_measles_suggestion_3",
     ],
     bgColor: "bg-purple-50",
     textColor: "text-purple-800",
@@ -34,45 +35,45 @@ export const diseaseDetails = {
     gaugeColor: "#a855f7"
   },
   Monkeypox: {
-    name: "Monkeypox (Cacar Monyet)",
+    name: "disease_monkeypox_name",
     slug: "monkeypox",
     Icon: Bug,
-    defaultDescription: "Penyakit virus langka yang menyebabkan ruam dan gejala mirip flu.",
+    defaultDescription: "disease_monkeypox_description",
     defaultSuggestions: [
-        "Segera konsultasikan dengan dokter atau fasilitas kesehatan terdekat.",
-        "Isolasi diri untuk mencegah penularan.",
-        "Hindari menggaruk ruam untuk mencegah infeksi sekunder.",
-        "Jaga kebersihan diri dan lingkungan.",
+        "disease_monkeypox_suggestion_1",
+        "disease_monkeypox_suggestion_2",
+        "disease_monkeypox_suggestion_3",
+        "disease_monkeypox_suggestion_4",
     ],
     bgColor: "bg-orange-50",
     textColor: "text-orange-800",
     borderColor: "border-orange-500",
-    gaugeColor: "#f97316" // orange-500
+    gaugeColor: "#f97316"
   },
   Normal: { 
-    name: "Kulit Normal",
+    name: "disease_normal_name",
     slug: null,
     Icon: ShieldCheck,
-    defaultDescription: "Tidak terdeteksi adanya kelainan kulit signifikan berdasarkan gambar yang diunggah.",
+    defaultDescription: "disease_normal_description",
     defaultSuggestions: [
-      "Lanjutkan menjaga kebersihan dan kesehatan kulit Anda.",
-      "Gunakan tabir surya untuk melindungi kulit dari paparan sinar UV.",
-      "Jika ada keluhan, konsultasikan dengan dokter kulit.",
+      "disease_normal_suggestion_1",
+      "disease_normal_suggestion_2",
+      "disease_normal_suggestion_3",
     ],
     bgColor: "bg-green-50",
     textColor: "text-green-800",
     borderColor: "border-green-500",
-    gaugeColor: "#22c55e" // green-500
+    gaugeColor: "#22c55e"
   },
   unknown: {
-    name: "Tidak Diketahui",
+    name: "disease_unknown_name",
     slug: null,
     Icon: HelpCircle,
-    defaultDescription: "Hasil deteksi tidak dapat dikategorikan secara spesifik.",
-    defaultSuggestions: ["Harap konsultasikan dengan profesional medis untuk evaluasi lebih lanjut."],
+    defaultDescription: "disease_unknown_description",
+    defaultSuggestions: ["disease_unknown_suggestion_1"],
     bgColor: "bg-gray-100",
     textColor: "text-gray-800",
     borderColor: "border-gray-500",
-    gaugeColor: "#6b7280" // gray-500
+    gaugeColor: "#6b7280"
   }
 };

@@ -1,11 +1,13 @@
+// src/components/DiseaseInfoA-ccordion.jsx
 'use client';
 
 import { useState } from 'react';
 import Markdown from 'markdown-to-jsx';
+import { useTranslation } from 'react-i18next';
 import { Activity, Zap, Users, ShieldCheck, AlertTriangle, ChevronDown } from 'lucide-react';
 
 function AccordionItem({ section, isOpen, onToggle }) {
-  const { id, title, content, icon: Icon, iconColor, iconBgColor } = section;
+  const { title, content, icon: Icon, iconColor, iconBgColor } = section;
 
   return (
     <div className="border-b border-slate-200 dark:border-slate-700">
@@ -33,9 +35,33 @@ function AccordionItem({ section, isOpen, onToggle }) {
       >
         <div className="overflow-hidden">
           <div className="p-5 sm:p-6 ">
-            <div className="markdown-content">
-            <Markdown>{content || "Informasi tidak tersedia."}</Markdown>
-
+            {/* PERBAIKAN: 
+              - Menambahkan styling langsung ke komponen Markdown menggunakan 'options'.
+              - Ini akan menata ulang daftar (ul/li) dan elemen lainnya agar sesuai dengan desain yang diinginkan
+                tanpa memerlukan plugin CSS tambahan.
+            */}
+            <div className="text-slate-700 dark:text-slate-300 leading-relaxed">
+              <Markdown options={{
+                overrides: {
+                  ul: {
+                    props: {
+                      className: 'list-disc space-y-2 pl-5',
+                    },
+                  },
+                  li: {
+                      props: {
+                          className: 'marker:text-sky-500',
+                      },
+                  },
+                  strong: {
+                      props: {
+                          className: 'font-semibold text-slate-800 dark:text-slate-200',
+                      },
+                  },
+                },
+              }}>
+                {content}
+              </Markdown>
             </div>
           </div>
         </div>
@@ -45,6 +71,7 @@ function AccordionItem({ section, isOpen, onToggle }) {
 }
 
 export default function DiseaseInfoAccordion({ data }) {
+  const { t } = useTranslation();
   const [openSection, setOpenSection] = useState('symptoms');
 
   const handleToggle = (id) => {
@@ -52,19 +79,20 @@ export default function DiseaseInfoAccordion({ data }) {
   };
 
   const sections = [
-    { id: 'symptoms', title: 'Gejala Umum', content: data.symptoms, icon: Activity, 
+    // Pastikan kunci 'info_accordion_symptoms' ada di file translation.json Anda
+    { id: 'symptoms', title: t('info_accordion_symptoms'), content: t(data.symptomsKey), icon: Activity, 
       iconColor: 'text-red-600 dark:text-red-400', 
       iconBgColor: 'bg-red-100 dark:bg-red-900/50' },
-    { id: 'causes', title: 'Akar Penyebab', content: data.causes, icon: Zap, 
+    { id: 'causes', title: t('info_accordion_causes'), content: t(data.causesKey), icon: Zap, 
       iconColor: 'text-orange-600 dark:text-orange-400', 
       iconBgColor: 'bg-orange-100 dark:bg-orange-900/50' },
-    { id: 'transmission', title: 'Cara Penularan', content: data.transmission, icon: Users, 
+    { id: 'transmission', title: t('info_accordion_transmission'), content: t(data.transmissionKey), icon: Users, 
       iconColor: 'text-purple-600 dark:text-purple-400', 
       iconBgColor: 'bg-purple-100 dark:bg-purple-900/50' },
-    { id: 'prevention', title: 'Langkah Pencegahan', content: data.prevention, icon: ShieldCheck, 
+    { id: 'prevention', title: t('info_accordion_prevention'), content: t(data.preventionKey), icon: ShieldCheck, 
       iconColor: 'text-green-600 dark:text-green-400', 
       iconBgColor: 'bg-green-100 dark:bg-green-900/50' },
-    { id: 'when-to-see-doctor', title: 'Kapan Harus ke Dokter?', content: data.whenToSeeDoctor, icon: AlertTriangle, 
+    { id: 'when-to-see-doctor', title: t('info_accordion_doctor'), content: t(data.whenToSeeDoctorKey), icon: AlertTriangle, 
       iconColor: 'text-white', 
       iconBgColor: 'bg-red-500 dark:bg-red-600' },
   ];
@@ -72,14 +100,12 @@ export default function DiseaseInfoAccordion({ data }) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden ring-1 ring-slate-200/50 dark:ring-slate-700/50">
       {sections.map(section => (
-        (section.content || section.id === 'when-to-see-doctor') && (
-            <AccordionItem
-              key={section.id}
-              section={section}
-              isOpen={openSection === section.id}
-              onToggle={() => handleToggle(section.id)}
-            />
-        )
+        <AccordionItem
+          key={section.id}
+          section={section}
+          isOpen={openSection === section.id}
+          onToggle={() => handleToggle(section.id)}
+        />
       ))}
     </div>
   );

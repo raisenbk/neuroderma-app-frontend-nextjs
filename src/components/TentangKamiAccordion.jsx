@@ -1,53 +1,57 @@
+// src/components/TentangKamiAccordion.jsx
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { Lightbulb, ShieldCheck, Mail, AlertTriangle, ChevronDown } from 'lucide-react';
-
-const sections = [
-  {
-    id: 'misi',
-    title: 'Misi Kami',
-    icon: Lightbulb,
-    iconClassName: 'bg-sky-100 text-sky-600 dark:bg-sky-900/50 dark:text-sky-400',
-    content: (
-        <p>Misi kami adalah memberdayakan individu dengan menyediakan informasi kesehatan kulit yang mudah diakses dan alat deteksi dini yang intuitif. Kami percaya bahwa kesadaran dan deteksi awal adalah kunci untuk penanganan yang lebih efektif.</p>
-    ),
-  },
-  {
-    id: 'teknologi',
-    title: 'Teknologi',
-    icon: ShieldCheck,
-    iconClassName: 'bg-teal-100 text-teal-600 dark:bg-teal-900/50 dark:text-teal-400',
-    content: (
-        <p>NeuroDerma memanfaatkan <em>machine learning</em> dan neural networks, dengan antarmuka Next.js yang responsif dan didukung oleh CMS Strapi untuk manajemen konten yang fleksibel.</p>
-    ),
-  },
-  {
-    id: 'disclaimer',
-    title: 'Penting untuk Diingat',
-    icon: AlertTriangle,
-    iconClassName: 'bg-red-200 text-red-600 dark:bg-red-900/50 dark:text-red-400',
-    content: (
-        <>
-            <p className="font-semibold text-red-800 dark:text-red-300">NeuroDerma adalah alat bantu informasi, <strong>bukan pengganti diagnosis medis profesional</strong>.</p>
-            <p className="mt-2 text-red-700 dark:text-red-400">Akurasi dapat dipengaruhi oleh kualitas gambar. Konsultasi langsung dengan dokter atau dermatologis adalah langkah yang paling tepat untuk setiap kekhawatiran medis.</p>
-        </>
-    ),
-  },
-  {
-    id: 'kontak',
-    title: 'Hubungi Kami',
-    icon: Mail,
-    iconClassName: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400',
-    content: (
-        <p>Kami sangat menghargai masukan Anda. Hubungi kami melalui <a href="mailto:rafi@neuroderma.com" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">email</a> atau kunjungi <Link href="/kontak" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">halaman kontak</Link> kami.</p>
-    ),
-  },
-];
+import { useTranslation, Trans } from 'react-i18next'; // Impor Trans
 
 export default function TentangKamiAccordion() {
+  const { t } = useTranslation();
   const [openSection, setOpenSection] = useState('misi');
+
+  // Pindahkan array ke dalam komponen agar bisa mengakses `t`
+  const sections = [
+    {
+      id: 'misi',
+      title: t('about_accordion_mission_title'),
+      icon: Lightbulb,
+      iconClassName: 'bg-sky-100 text-sky-600 dark:bg-sky-900/50 dark:text-sky-400',
+      content: <p>{t('about_accordion_mission_content')}</p>,
+    },
+    {
+      id: 'teknologi',
+      title: t('about_accordion_tech_title'),
+      icon: ShieldCheck,
+      iconClassName: 'bg-teal-100 text-teal-600 dark:bg-teal-900/50 dark:text-teal-400',
+      content: <p dangerouslySetInnerHTML={{ __html: t('about_accordion_tech_content') }} />,
+    },
+    {
+      id: 'disclaimer',
+      title: t('about_accordion_disclaimer_title'),
+      icon: AlertTriangle,
+      iconClassName: 'bg-red-200 text-red-600 dark:bg-red-900/50 dark:text-red-400',
+      content: (
+        <>
+          <p className="font-semibold text-red-800 dark:text-red-300" dangerouslySetInnerHTML={{ __html: t('about_accordion_disclaimer_content_1') }} />
+          <p className="mt-2 text-red-700 dark:text-red-400">{t('about_accordion_disclaimer_content_2')}</p>
+        </>
+      ),
+    },
+    {
+      id: 'kontak',
+      title: t('about_accordion_contact_title'),
+      icon: Mail,
+      iconClassName: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400',
+      content: (
+        <p>
+          <Trans i18nKey="about_accordion_contact_content">
+            Kami sangat menghargai masukan Anda. Hubungi kami melalui <a href="mailto:rafi@neuroderma.com" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">email</a> atau kunjungi <Link href="/kontak" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">halaman kontak</Link> kami.
+          </Trans>
+        </p>
+      ),
+    },
+  ];
 
   const handleToggle = (id) => {
     setOpenSection(openSection === id ? null : id);
