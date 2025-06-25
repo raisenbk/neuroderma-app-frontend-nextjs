@@ -8,7 +8,6 @@ import DiseaseInfoAccordion from '@/components/DiseaseInfoAccordion';
 import { useTranslation } from 'react-i18next';
 import '../../../i18n';
 
-// Gunakan kunci terjemahan yang lebih detail
 const diseaseDataStructure = [
   {
     nameKey: "disease_chickenpox_name",

@@ -5,16 +5,15 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import TentangKamiAccordion from '@/components/TentangKamiAccordion';
 import Image from 'next/image';
-import { useTranslation } from 'react-i18next'; // Impor hook
-import '../../i18n'; // Pastikan konfigurasi diimpor
+import { useTranslation } from 'react-i18next'; 
+import '../../i18n'; 
 
 export default function TentangKamiPage() {
-  const { t } = useTranslation(); // Inisialisasi hook
+  const { t } = useTranslation(); 
 
   return (
     <main className="bg-slate-50 dark:bg-slate-900">
       <div className="relative isolate overflow-hidden">
-        {/* Latar belakang dekoratif tidak berubah */}
         <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]" aria-hidden="true">
           <div 
             className="relative left-1/2 -z-10 aspect-[1155/678] w-[36.125rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#80caff] to-[#4f46e5] opacity-20 dark:opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem]" 

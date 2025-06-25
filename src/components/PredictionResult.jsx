@@ -8,12 +8,12 @@ import { motion } from 'framer-motion';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
-import { useTranslation } from 'react-i18next'; // Impor useTranslation
+import { useTranslation } from 'react-i18next'; 
 
 import { diseaseDetails } from '@/lib/diseaseInfo.js'; 
 
 export default function PredictionResultDisplay({ result, uploadedImageFile }) {
-  const { t } = useTranslation(); // Inisialisasi hook
+  const { t } = useTranslation();
   const [imageUrl, setImageUrl] = useState(null);
   const [animatedConfidence, setAnimatedConfidence] = useState(0);
 
@@ -35,7 +35,6 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
   const details = diseaseDetails[result.disease] || diseaseDetails.unknown;
   const { Icon, gaugeColor, bgColor, textColor, borderColor } = details;
 
-  // Terjemahkan kunci dari object details
   const displayName = t(details.name);
   const description = result.description ? result.description : t(details.defaultDescription);
   const suggestions = details.defaultSuggestions.map(key => t(key));
@@ -72,7 +71,7 @@ export default function PredictionResultDisplay({ result, uploadedImageFile }) {
             <motion.div layoutId="uploaded-image" className="w-full">
               <Image
                 src={imageUrl}
-                alt={t('result_uploaded_image_alt')} // Tambahkan alt text
+                alt={t('result_uploaded_image_alt')} 
                 width={400}
                 height={400}
                 className="rounded-lg shadow-lg object-contain mx-auto border-2 border-white"

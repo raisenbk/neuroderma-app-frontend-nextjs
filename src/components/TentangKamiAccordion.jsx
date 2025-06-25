@@ -4,13 +4,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Lightbulb, ShieldCheck, Mail, AlertTriangle, ChevronDown } from 'lucide-react';
-import { useTranslation, Trans } from 'react-i18next'; // Impor Trans
+import { useTranslation, Trans } from 'react-i18next'; 
 
 export default function TentangKamiAccordion() {
   const { t } = useTranslation();
   const [openSection, setOpenSection] = useState('misi');
 
-  // Pindahkan array ke dalam komponen agar bisa mengakses `t`
   const sections = [
     {
       id: 'misi',
@@ -46,7 +45,7 @@ export default function TentangKamiAccordion() {
       content: (
         <p>
           <Trans i18nKey="about_accordion_contact_content">
-            Kami sangat menghargai masukan Anda. Hubungi kami melalui <a href="mailto:rafi@neuroderma.com" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">email</a> atau kunjungi <Link href="/kontak" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">halaman kontak</Link> kami.
+            Kami sangat menghargai masukan Anda. Hubungi kami melalui <a href="mailto:dmanusia69@gmail.com" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">email</a>.
           </Trans>
         </p>
       ),

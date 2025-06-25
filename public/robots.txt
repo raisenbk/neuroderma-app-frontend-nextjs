@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://neuroderma.vercel.app
+
+# Sitemaps
+Sitemap: https://neuroderma.vercel.app/sitemap.xml

@@ -3,7 +3,6 @@ import { Bug, ShieldCheck, HelpCircle } from 'lucide-react';
 
 export const diseaseDetails = {
   Chickenpox: {
-    // Gunakan kunci dari file JSON
     name: "disease_chickenpox_name",
     slug: "chickenpox",
     Icon: Bug,

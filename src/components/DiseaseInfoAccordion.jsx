@@ -35,11 +35,6 @@ function AccordionItem({ section, isOpen, onToggle }) {
       >
         <div className="overflow-hidden">
           <div className="p-5 sm:p-6 ">
-            {/* PERBAIKAN: 
-              - Menambahkan styling langsung ke komponen Markdown menggunakan 'options'.
-              - Ini akan menata ulang daftar (ul/li) dan elemen lainnya agar sesuai dengan desain yang diinginkan
-                tanpa memerlukan plugin CSS tambahan.
-            */}
             <div className="text-slate-700 dark:text-slate-300 leading-relaxed">
               <Markdown options={{
                 overrides: {
@@ -79,7 +74,6 @@ export default function DiseaseInfoAccordion({ data }) {
   };
 
   const sections = [
-    // Pastikan kunci 'info_accordion_symptoms' ada di file translation.json Anda
     { id: 'symptoms', title: t('info_accordion_symptoms'), content: t(data.symptomsKey), icon: Activity, 
       iconColor: 'text-red-600 dark:text-red-400', 
       iconBgColor: 'bg-red-100 dark:bg-red-900/50' },
