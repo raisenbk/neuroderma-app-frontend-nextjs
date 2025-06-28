@@ -107,5 +107,9 @@
   "info_accordion_transmission": "Transmission",
   "info_accordion_prevention": "Prevention",
   "info_accordion_doctor": "When to See The Doctor?",
-  "info_page_back_button": "Back to Home"
+  "info_page_back_button": "Back to Home",
+  "nav_info_penyakit": "Diseases",
+  "nav_monkeypox": "Monkeypox",
+  "nav_chickenpox": "Chickenpox",
+  "nav_measles": "Measles"
 }

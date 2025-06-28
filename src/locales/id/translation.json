@@ -107,6 +107,10 @@
   "info_accordion_transmission": "Penularan",
   "info_accordion_prevention": "Pencegahan",
   "info_accordion_doctor": "Kapan ke Dokter?",
-  "info_page_back_button": "Kembali ke Halaman Utama"
+  "info_page_back_button": "Kembali ke Halaman Utama",
+  "nav_info_penyakit": "Penyakit",
+  "nav_monkeypox": "Cacar Monyet",
+  "nav_chickenpox": "Cacar Air",
+  "nav_measles": "Campak"
 
 }

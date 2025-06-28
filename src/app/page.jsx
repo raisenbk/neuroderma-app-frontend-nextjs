@@ -42,8 +42,7 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 md:p-12
                    bg-gradient-to-br from-slate-100 to-sky-100
                    dark:from-slate-900 dark:to-sky-950">
-      
-      {/* Tombol ganti bahasa diletakkan di pojok */}
+     
       <div className="absolute top-5 right-5 z-10">
         <LanguageSwitcher />
       </div>

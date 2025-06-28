@@ -2,9 +2,10 @@
 'use client';
 
 import { Inter } from 'next/font/google';
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, Transition, MenuItems } from '@headlessui/react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import './globals.css';
 
 import '../i18n'; 
@@ -93,6 +94,30 @@ function Footer() {
         </p>
       </div>
     </footer>
+  );
+}
+
+function ChevronDownIcon(props) {
+  return (
+    <svg {...props} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+function ChevronUpIcon(props) {
+  return (
+    <svg {...props} viewBox="0 0 20 20" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832 6.29 12.77a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z"
+        clipRule="evenodd"
+      />
+    </svg>
   );
 }
 
@@ -189,6 +214,68 @@ export default function RootLayout({ children }) {
                 <Link href="/faq" className="px-3 py-2 rounded-md text-sm font-medium text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white transition-colors">
                   {t('nav_faq')}
                 </Link>
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <MenuButton className="inline-flex w-full justify-center items-center px-3 py-2 rounded-md text-sm font-medium text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+                      {t('nav_info_penyakit')} 
+                      <ChevronDownIcon
+                        className="ml-2 -mr-1 h-5 w-5 text-sky-500"
+                        aria-hidden="true"
+                      />
+                    </MenuButton>
+                  </div>
+
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <MenuItems className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black/5 focus:outline-none">
+                      <div className="px-1 py-1">
+                        <MenuItem>
+                          {({ active }) => (
+                            <Link
+                              href="/info/monkeypox"
+                              className={`${
+                                active ? 'bg-sky-500 text-white' : 'text-gray-900 dark:text-gray-200'
+                              } group flex w-full items-center rounded-md px-2 py-2 text-sm transition-colors`}
+                            >
+                              {t('nav_monkeypox')}
+                            </Link>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <Link
+                              href="/info/chickenpox"
+                              className={`${
+                                active ? 'bg-sky-500 text-white' : 'text-gray-900 dark:text-gray-200'
+                              } group flex w-full items-center rounded-md px-2 py-2 text-sm transition-colors`}
+                            >
+                              {t('nav_chickenpox')} 
+                            </Link>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <Link
+                              href="/info/measles"
+                              className={`${
+                                active ? 'bg-sky-500 text-white' : 'text-gray-900 dark:text-gray-200'
+                              } group flex w-full items-center rounded-md px-2 py-2 text-sm transition-colors`}
+                            >
+                              {t('nav_measles')} 
+                            </Link>
+                          )}
+                        </MenuItem>
+                      </div>
+                    </MenuItems>
+                  </Transition>
+                </Menu>
               </div>
 
               <div className="flex items-center space-x-2">
@@ -229,6 +316,42 @@ export default function RootLayout({ children }) {
                 <Link href="/faq" className="block px-3 py-2 rounded-md text-base font-medium text-sky-700 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-gray-700 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                   {t('nav_faq')}
                 </Link>
+                <Disclosure as="div" className="mt-1">
+                  {({ open }) => (
+                    <>
+                      <DisclosureButton className="flex w-full justify-between items-center rounded-lg px-3 py-2 text-left text-base font-medium text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+                        <span>{t('nav_info_penyakit')}</span> 
+                        <ChevronUpIcon
+                          className={`${
+                            open ? 'rotate-180 transform' : ''
+                          } h-5 w-5 text-sky-600 dark:text-sky-400 transition-transform`}
+                        />
+                      </DisclosureButton>
+                      <DisclosurePanel className="px-4 pt-2 pb-2 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex flex-col space-y-2">
+                            <Link 
+                              href="/info/monkeypox" 
+                              className="block rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                              {t('nav_monkeypox')} {/* Cacar Monyet */}
+                            </Link>
+                            <Link 
+                              href="/info/chickenpox" 
+                              className="block rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                              {t('nav_chickenpox')} {/* Cacar Air */}
+                            </Link>
+                            <Link 
+                              href="/info/measles" 
+                              className="block rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                              {t('nav_measles')} {/* Campak */}
+                            </Link>
+                        </div>
+                      </DisclosurePanel>
+                    </>
+                  )}
+                </Disclosure>
               </div>
             </div>
           )}
