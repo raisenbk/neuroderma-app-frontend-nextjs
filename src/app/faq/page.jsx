@@ -11,7 +11,7 @@ export default function FAQPage() {
   const { t } = useTranslation();
 
   return (
-    <main className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 dark:from-slate-900 dark:to-sky-950 min-h-[calc(100vh-150px)]">
+    <div className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-sky-100 dark:from-slate-900 dark:to-sky-950">
       <div className="bg-white/90 dark:bg-slate-800/80 backdrop-blur-lg p-8 sm:p-12 rounded-xl shadow-2xl max-w-3xl mx-auto ring-1 ring-slate-200 dark:ring-slate-700">
         <div className="text-center mb-12">
           <HelpCircle className="w-16 h-16 mx-auto mb-4 text-blue-500 dark:text-blue-400" /> 
@@ -39,6 +39,6 @@ export default function FAQPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

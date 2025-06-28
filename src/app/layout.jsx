@@ -234,7 +234,7 @@ export default function RootLayout({ children }) {
           )}
         </header>
 
-        <main className="flex-grow container">
+        <main className="flex-grow">
           {children}
         </main>
 
