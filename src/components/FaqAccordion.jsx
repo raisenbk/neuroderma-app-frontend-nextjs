@@ -53,6 +53,8 @@ export default function FaqAccordion() {
     { question: "faq_q4", answer: "faq_a4" },
     { question: "faq_q5", answer: "faq_a5" },
     { question: "faq_q6", answer: "faq_a6" },
+    { question: "faq_q7", answer: "faq_a7" },
+    { question: "faq_q8", answer: "faq_a8" },
   ];
 
   const [openIndex, setOpenIndex] = useState(null);
