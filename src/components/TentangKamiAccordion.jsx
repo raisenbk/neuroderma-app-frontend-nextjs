@@ -45,7 +45,7 @@ export default function TentangKamiAccordion() {
       content: (
         <p>
           <Trans i18nKey="about_accordion_contact_content">
-            Kami sangat menghargai masukan Anda. Hubungi kami melalui <a href="mailto:dmanusia69@gmail.com" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">email</a>.
+            Kami sangat menghargai masukan Anda. Hubungi kami melalui <a href="mailto:rafihuseinbk@gmail.com" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">email</a>.
           </Trans>
         </p>
       ),
